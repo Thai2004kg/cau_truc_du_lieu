@@ -317,7 +317,7 @@ int DanhSachNhanVien::searchTen(char* ten){
 }
 
 void DanhSachNhanVien::searchTen(){
-	char* ten;
+	char[80] ten;
 	printf ("\n Ban ten nhan vien : ") ;
 	        cin >> ten ;
 	       int i;
