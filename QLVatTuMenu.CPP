@@ -98,7 +98,7 @@ int Search(list &ds, int x) {// T(n)= 4n+1+1=4n+2
 }
 
 
-void BaoLoi (char *s){
+void BaoLoi (const char *s){
   int x=wherex() , y=wherey();
   gotoxy (10,24);
   cout <<s;
@@ -107,6 +107,18 @@ void BaoLoi (char *s){
   clreol();
   gotoxy(x,y);
 }
+
+void NhapChuoi(const char *tieude, char *S, size_t size) {
+    std::cout << tieude;
+    std::cin.getline(S, size);
+    
+    while (strcmp(S, "") == 0) {
+        std::cout << "Input cannot be empty. " << tieude;
+        std::cin.getline(S, size);
+    }
+}
+
+
 void NhapChuoi (char *tieude, char *S) {
 	cout << tieude ;  fflush(stdin);
     do
@@ -123,8 +135,8 @@ while (1){
        BaoLoi ("Ma so sinh vien bi trung");
        continue;
    }
-    NhapChuoi (  "Nhap Ho: ", sv.ho);  // cout << "Ho : " ; gets(sv.ho);
-    NhapChuoi (  "Nhap ten:", sv.ten);
+    NhapChuoi (  "Nhap Ho: ", sv.ho, 80);  // cout << "Ho : " ; gets(sv.ho);
+    NhapChuoi (  "Nhap ten:", sv.ten, 80);
     return 1;
 }
 }
@@ -162,7 +174,7 @@ void ThongTinSv ( list &ds, int maso ) {
   else { printf( " Ho ten sv : %30s%10s", ds.nodes[i]->ho, ds.nodes[i]->ten); 
          getch () ; }
 }
-void SaveFile(list &ds,char *filename) {
+void SaveFile(list &ds,const char *filename) {
  FILE * f;
  if ((f=fopen(filename,"wb"))==NULL)
  {  BaoLoi ("Loi mo file de ghi"); return ;
@@ -174,7 +186,7 @@ void SaveFile(list &ds,char *filename) {
  BaoLoi ("Da ghi xong danh sach vao file");
 
 }
-void OpenFile(list &ds, char *filename) {
+void OpenFile(list &ds, const char *filename) {
  FILE * f; Sinhvien sv;
  if ((f=fopen(filename,"rb"))==NULL)
  {  BaoLoi ("Loi mo file de doc"); return ;
@@ -201,7 +213,7 @@ void XoaSv(list &ds, int maso){
    if (i==-1) BaoLoi("Ma so sinh vien khong co trong danh sach");
    else  DeleteItem (ds,  i);
 }
-int XoaSvTheoTen(list &ds, char *ten){
+int XoaSvTheoTen(list &ds, const char *ten){
 	int dem=0;
 	for (int i = 0; i < ds.n; )
 	  if (stricmp(ds.nodes[i]->ten, ten) == 0) 
@@ -224,7 +236,7 @@ int InsertOrder (list &ds, Sinhvien &sv){
 	
 }
 
-int XoaTenSv(list &ds, char *tentemp)
+int XoaTenSv(list &ds, const char *tentemp)
 {
   int countDelete = 0;
   for (int i = 0; i < ds.n;i++ )

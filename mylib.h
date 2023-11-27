@@ -11,13 +11,35 @@
 #define PASSWORD "abcdef"
 //const int WHITE=15;
 
+/*
 char* Pwd () {
      char S[40]; int i=0;
+      
      while ((S[i]= getch()) != Enter ) 
      { printf ("%c", '*') ; i++ ; 
      }
      S[i]='\0';
      return S;
+}
+*/
+
+char* Pwd() {
+    char *S = (char *)malloc(40 * sizeof(char));
+    if (S == NULL) {
+        // Handle memory allocation failure
+        exit(EXIT_FAILURE);
+    }
+
+    int i = 0;
+    int ch;
+    while ((ch = getch()) != '\n') {
+        printf("%c", '*');
+        S[i] = ch;
+        i++;
+    }
+
+    S[i] = '\0';
+    return S;
 }
 
 int CheckPwd () {
