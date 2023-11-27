@@ -113,7 +113,7 @@ void NhapChuoi(const char *tieude, char *S, size_t size) {
     std::cin.getline(S, size);
     
     while (strcmp(S, "") == 0) {
-        std::cout << "Input cannot be empty. " << tieude;
+        std::cout << "Khong duoc nhap chuoi rong. " << tieude;
         std::cin.getline(S, size);
     }
 }
