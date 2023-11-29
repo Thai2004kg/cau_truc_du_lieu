@@ -5,6 +5,7 @@
 #include <conio.h>
 #include <cstdio>
 #include"HoaDon.h"
+#include "mylib.h"
 using namespace std;
 
     CTHD::CTHD() {
@@ -399,20 +400,27 @@ void DanhSachNhanVien::Doc(char* filename){
     file_obj.close();
 }
 
+
+//input: Danh sach nhan vien
+//		MaSo Nhan vien
+//		PASSWORD (dinh nghia trong mylib.h; #define PASSWORD "abcdef")
+//output: Ma so nhan vien co trong danh sach
+
 int DanhSachNhanVien::Login(){
-int maNV,i;
-do{	cout<<"Dang nhap: ";
+		system("cls"); //xoa man hinh
+int maNV,i,check;
+do{	cout<<"Tai khoan: ";
 	cin>>maNV;
 	i=searchMaNV(maNV);
-	if (i==-1)
-	cout<<"sai thong tin dang nhap\n";
+	if (i==-1){
+		cout<<"sai tai khoan\n";
+		}
 }
 while(i==-1);
 //goi ham hien thi menu o day
-	dsnv[i].HienThi();
-	getch();
+//	dsnv[i].HienThi();
+//	getch();
 return maNV;
-
 	}
 
 	
