@@ -1,4 +1,3 @@
-#include "mylib.h"
 #define Enter 13
 //const int WHITE=15;
 #define PASSWORD "abc"

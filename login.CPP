@@ -20,8 +20,8 @@ char thucdon [so_item][50] = {"1. Liet ke danh sach      ",
 			                  "2. Tim kiem nhan vien      ",
 			                  "3. Them nhan vien          ",
 			                  "4. Xoa nhan vien          ",
-			                  "5. Mo  danh sach          ",
-			                  "6. Luu                    ",
+			                  "5. Luu          ",
+			                  "6. Liet ke vat tu         ",
 			                  "7. Ket thuc chuong trinh  "};
 
 void Normal () {
@@ -105,15 +105,24 @@ void NhapChuoi (char *tieude, char *S) {
     while (strcmp(S,"")==0)  ;	
 }
 
+void LietKeVatTu(CayTimKiem t, char* filename){
+			t.createTree(filename);
+			t.LNR();
+			getch();
+}
+
 int MASO_NHANVIEN=-1;
 
 int main (){ system ("cls");
- char filename[80]="NhanVien.Dat";
+ char fileNhanVien[80]="NhanVien.Dat";
+ char fileVatTu[80]="vattu.dat";
  char ten[20]; 
-  int chon,vitri;  DanhSachNhanVien ds; int masoNv; NhanVien nv; 
- // OpenFile(ds,filename);
- 
- ds.Doc(filename);// doc filename, ghi len ds
+  int chon,vitri;  
+  DanhSachNhanVien ds; //Cau Truc Du lieu Luu Danh Sach NhanVien
+  int masoNv; NhanVien nv; 
+  CayTimKiem t; // Cau Truc du lieu Cay Luu thong tin VatTu
+  
+ ds.Doc(fileNhanVien);// doc filename, ghi len ds
  int check;
  MASO_NHANVIEN=ds.Login();
  if(MASO_NHANVIEN!=-1)
@@ -131,9 +140,12 @@ int main (){ system ("cls");
             break;
     case 4: ds.XoaNhanVien(); 
     		break;
-    case 5: ds.hienThi(); break;
-    case 6: ds.Luu(filename); break;
-    case so_item : { ds.Luu(filename); return 0;}
+    case 5: ds.Luu(fileNhanVien); break;
+    case 6: {
+		LietKeVatTu(t,fileVatTu);
+		break;
+	}
+    case so_item : { ds.Luu(fileNhanVien); return 0;}
    }
   } while (1);
 }
