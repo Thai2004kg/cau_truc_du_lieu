@@ -6,9 +6,7 @@
 #include <cstdio>
 
 using namespace std;
-//
-#ifndef HOADON_H
-#define HOADON_H
+
 #define HDlength 100
 #define MaxNV 200
 #define maxlength 255
@@ -115,9 +113,6 @@ public:
 	void XoaNhanVien();
 };
 	
-#endif 
-
-
 
 //=======================
 //BEGIN CTHD: Chi tiet Hoa Don
