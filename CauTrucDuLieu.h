@@ -7,7 +7,121 @@
 #include"HoaDon.h"
 #include "mylib.h"
 using namespace std;
+//
+#ifndef HOADON_H
+#define HOADON_H
+#define HDlength 100
+#define MaxNV 200
+class CTHD {
+public:
+    int MaVT;
+    int SoLuong;
+    double DonGia;
+    double VAT;
+    
+    CTHD();
 
+    CTHD(int maVT, int soLuong, double donGia, double vat) ;
+
+    void nhapChiTietHoaDon() ;
+
+    void hienThi();
+    void update(int ma_vt, int sl, double d, double vat) ;
+               
+};
+
+class CTHDNode {
+public:
+    CTHD DuLieu;
+    CTHDNode* next;
+
+    CTHDNode(CTHD ct);
+};
+
+class DanhSachChiTietHoaDon{
+	public:	
+		CTHDNode* head;
+		DanhSachChiTietHoaDon();
+	
+	void insertHead(CTHD d);
+	void taoDanhSach();
+	void hienThi();
+	void Luu(char* filename);
+	void Doc(char* filename);
+	
+};
+
+class HoaDon {
+public:
+    int SoHD;
+    char NgayLap[HDlength];
+    char Loai[HDlength];
+    DanhSachChiTietHoaDon dscthd;
+	HoaDon();
+    HoaDon(int soHD, char* ngayLap, char* loai);
+    void nhapHoaDon() ;
+    void hienThi() ;
+
+};
+
+class HoaDonNode {
+public:
+	HoaDon data;
+	HoaDonNode* next;
+	
+	HoaDonNode(HoaDon dt);
+};
+
+class DSHoaDon{
+public:	
+	HoaDonNode* head;
+	DSHoaDon();
+void insertHead(HoaDon d);
+void taoDanhSach();
+void hienThi();
+void Luu(char* filename);
+void Doc(char* filename);
+};
+
+class NhanVien{
+	public:
+		int MaNV;
+		char Ho[MaxNV];
+		char Ten[MaxNV];
+		char Phai[5];
+		DSHoaDon dshd;
+	NhanVien();
+	NhanVien(int maNV,char* ho, char* ten, char* phai);
+	void NhapNhanVien();
+	void HienThi();
+	};
+	
+class DanhSachNhanVien{
+public:
+	int SoNV;
+	NhanVien dsnv[MaxNV];
+	DanhSachNhanVien();
+	void them(NhanVien nv);//them cuoi ds
+	void nhap();
+	void hienThi();
+	int searchMaNV(int maNV);
+	int searchTen(char* ten);
+	void searchTen();
+	void swap(NhanVien &a,NhanVien &b);
+	void SapXep();
+	void Luu(char* filename);
+	void Doc(char* filename);
+	int Login(); // return MaNV sau dang nhap thanh cong
+	void XoaNhanVien();
+};
+	
+#endif 
+
+
+
+//=======================
+//BEGIN CTHD: Chi tiet Hoa Don
+//=======================
     CTHD::CTHD() {
         MaVT = 0;
         SoLuong = 0;
@@ -47,14 +161,17 @@ using namespace std;
         cout << "don gia: " << DonGia << " ";
         cout << "thue VAT: " << VAT << " \n";
     }
-     void  CTHD::update(int ma_vt, int sl, double d, double vat) {
+  	void  CTHD::update(int ma_vt, int sl, double d, double vat) {
       
             MaVT = ma_vt;
             SoLuong = sl;
         	DonGia = d;
             VAT = vat;
         }
-               
+    
+//=======================
+//BEGIN DanhSachChiTietHoaDon: Danh sach Chi tiet Hoa Don
+//=======================       
     CTHDNode::CTHDNode(CTHD ct) {
         DuLieu = ct;
         next = NULL;
@@ -125,8 +242,11 @@ using namespace std;
     cout << "Doc thanh cong " << filename << endl;
 }
 
-	
-//HoaDon
+    
+//=======================
+//BEGIN HoaDon: Hoa Don
+//=======================  
+
 	HoaDon::HoaDon(){
 		SoHD =0;
 		strcpy(NgayLap,"");
@@ -166,8 +286,9 @@ using namespace std;
 		dscthd.hienThi();
     }
 
-
-//	HoaDonNode
+//=======================
+//BEGIN DSHoaDon: Danh sach Hoa Don
+//=======================  
 	HoaDonNode::HoaDonNode(HoaDon dt){
 		data = dt;
 		next = NULL;
@@ -237,7 +358,10 @@ void DSHoaDon::Doc(char* filename) {
     cout << "Doc thanh cong " << filename << endl;
 }
 		
-// NhanVien
+//=======================
+//BEGIN NhanVien: Nhan Vien
+//=======================  
+
 NhanVien::NhanVien(){
 }
 NhanVien::NhanVien(int maNV, char* ho, char*ten, char* phai){
@@ -274,7 +398,9 @@ void NhanVien::HienThi(){
 	//	getch();
 }
 
-//DanhSachNhanVien
+//=======================
+//BEGIN DanhSachNhanVien: Danh sach Nhan Vien
+//=======================
 DanhSachNhanVien::DanhSachNhanVien(){
 	SoNV=0;
 }
@@ -443,8 +569,6 @@ void DanhSachNhanVien::XoaNhanVien() {
     getch();
   }
 }
-
-
 
 
 

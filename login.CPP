@@ -4,8 +4,8 @@
 #include <dos.h>
 #include <string.h>
 #include <windows.h>
-#include "HoaDon.h"
-#include "mylib.h"
+#include "CauTrucDuLieu.h"
+#include "GiaoDien.h"
 
 using namespace std;
 const int MAXLIST =20000;
