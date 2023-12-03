@@ -1,16 +1,9 @@
-
-#include <conio.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <dos.h>
-#include <string.h>
-#include <windows.h>
-
 #define Enter 13
 //const int WHITE=15;
-#define PASSWORD "abcdef"
+#define PASSWORD "abc"
 //const int WHITE=15;
 
+<<<<<<< HEAD:mylib.h
 /*char* Pwd () {
      char S[40]; int i=0;
      while ((S[i]= getch()) != Enter ) 
@@ -18,6 +11,25 @@
      }
      S[i]='\0';
      return S;
+=======
+char* Pwd() {
+    char *S = (char *)malloc(40 * sizeof(char));
+    if (S == NULL) {
+        // Handle memory allocation failure
+        exit(EXIT_FAILURE);
+    }
+
+    int i = 0;
+    int ch;
+    while ((ch = getch()) != '\r' && ch != '\n' && ch != EOF) {
+        printf("%c", '*');
+        S[i] = ch;
+        i++;
+    }
+
+    S[i] = '\0';
+    return S;
+>>>>>>> 5532183746689df02e699c54a4827fcb51a474be:GiaoDien.h
 }
 */
 char* Pwd() {
@@ -41,9 +53,9 @@ char* Pwd() {
 int CheckPwd () {
     int dem =0; 
     for ( dem =1 ; dem <=3 ; dem++)
-    { printf( "Password :"); 
+    { printf( "Mat khau :"); 
       if (strcmp(Pwd(),PASSWORD) ==0)   return 1;
-      else printf ( "\nPassword sai. Hay nhap lai\n")  ; 
+      else printf ( "\nMat khau sai. Hay nhap lai\n")  ; 
     }
     return 0;  
 }
