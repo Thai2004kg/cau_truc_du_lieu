@@ -3,7 +3,6 @@
 #define PASSWORD "abc"
 //const int WHITE=15;
 
-<<<<<<< HEAD:mylib.h
 /*char* Pwd () {
      char S[40]; int i=0;
      while ((S[i]= getch()) != Enter ) 
