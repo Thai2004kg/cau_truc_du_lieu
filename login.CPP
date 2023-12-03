@@ -10,7 +10,7 @@
 using namespace std;
 const int MAXLIST =20000;
 
-const int so_item = 7;
+const int so_item = 10;
 const int dong =10;
 const int cot = 30 ;
 const int Up = 72; // Extended code 
@@ -22,16 +22,11 @@ char thucdon [so_item][50] = {"1. Liet ke danh sach      ",
 			                  "4. Xoa nhan vien          ",
 			                  "5. Luu          ",
 			                  "6. Liet ke vat tu         ",
-			                  "7. Ket thuc chuong trinh  "};
+			                  "7. Hieu chinh vat tu        ",
+			                "8.Them vat tu         ",
+			                 "9. Xoa vat tu        ",
+							  "10. Ket thuc chuong trinh  "};
 
-void Normal () {
-	SetColor(15);
-	SetBGColor(0);
-}
-void HighLight () {
-	SetColor(15);
-	SetBGColor(1);
-}
 int MenuDong(char td [so_item][50]){
 
   Normal(); system("cls");
@@ -78,37 +73,35 @@ do {
   } while (1);
 }
 
-void BaoLoi (const char *s){
-  int x=wherex() , y=wherey();
-  gotoxy (10,24);
-  cout <<s;
-  Sleep(2000);
-  gotoxy(10,24);
-  clreol();
-  gotoxy(x,y);
-}
-
-void NhapChuoi(const char *tieude, char *S, size_t size) {
-    std::cout << tieude;
-    std::cin.getline(S, size);
-    
-    while (strcmp(S, "") == 0) {
-        std::cout << "Khong duoc nhap chuoi rong. " << tieude;
-        std::cin.getline(S, size);
-    }
-}
-
-void NhapChuoi (char *tieude, char *S) {
-	cout << tieude ;  fflush(stdin);
-    do
-	  gets(S); 
-    while (strcmp(S,"")==0)  ;	
-}
 
 void LietKeVatTu(CayTimKiem t, char* filename){
 			t.createTree(filename);
 			t.LNR();
 			getch();
+}
+
+void HieuChinh(CayTimKiem t, char* filename){
+	
+	
+	 ofstream file_obj;
+     file_obj.open(filename, ios::out | ios::binary);
+
+        if (!file_obj) {
+            cerr << "Loi mo file: " << filename << endl;
+            getch();
+         return ;
+        }
+	
+	t.inputUpdateVatTu();
+	t.ghiFileLNR(file_obj);
+	cout<<"Hieu chinh thanh cong!";
+	getch();	
+}
+void ThemVatTu(CayTimKiem t, char* filename){
+	getch();
+}
+void XoaVatTu(CayTimKiem t, char* filename){
+	getch();
 }
 
 int MASO_NHANVIEN=-1;
@@ -119,7 +112,9 @@ int main (){ system ("cls");
  char ten[20]; 
   int chon,vitri;  
   DanhSachNhanVien ds; //Cau Truc Du lieu Luu Danh Sach NhanVien
+ 
   int masoNv; NhanVien nv; 
+ 
   CayTimKiem t; // Cau Truc du lieu Cay Luu thong tin VatTu
   
  ds.Doc(fileNhanVien);// doc filename, ghi len ds
@@ -145,8 +140,22 @@ int main (){ system ("cls");
 		LietKeVatTu(t,fileVatTu);
 		break;
 	}
+	case 7:{
+		HieuChinh(t,fileVatTu);
+		break;
+	}
+	case 8:{
+		ThemVatTu(t,fileVatTu);
+		break;
+	}
+	case 9:{
+		XoaVatTu(t,fileVatTu);
+	
+	
+		break;
+	}
     case so_item : { ds.Luu(fileNhanVien); return 0;}
-   }
+}
   } while (1);
 }
 else{

@@ -104,4 +104,41 @@ void SetBGColor(WORD color)
 void clrscr() {
 	system("cls");
 }
+void Normal () {
+	SetColor(15);
+	SetBGColor(0);
+}
+void HighLight () {
+	SetColor(15);
+	SetBGColor(1);
+}
+
+
+void BaoLoi (const char *s){
+  int x=wherex() , y=wherey();
+  gotoxy (10,24);
+  cout <<s;
+  Sleep(2000);
+  gotoxy(10,24);
+  clreol();
+  gotoxy(x,y);
+}
+
+void NhapChuoi(const char *tieude, char *S, size_t size) {
+    std::cout << tieude;
+    std::cin.getline(S, size);
+    
+    while (strcmp(S, "") == 0) {
+        std::cout << "Khong duoc nhap chuoi rong. " << tieude;
+        std::cin.getline(S, size);
+    }
+}
+
+void NhapChuoi (char *tieude, char *S) {
+	cout << tieude ;  fflush(stdin);
+    do
+	  gets(S); 
+    while (strcmp(S,"")==0)  ;	
+}
+
 
