@@ -1,11 +1,6 @@
-2 muoi kg 2
-4 mam kg 1
-6 botmi kg 44
-9 duong kg 5
-2 muoi kg 2
-4 mam kg 1
-5 banh mi kg 5
-6 botmi kg 44
-9 bot ngot kg 4
-2 muoi kg 2
-6 duong kg 3
+14509088,,,500
+7,Sua,Hop,41
+10,duong mia,kg,500
+12,Dau xanh ca,kg,600
+15, bot lua mi, kg,800
+20,dau do,kg,1000
