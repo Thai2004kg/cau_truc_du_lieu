@@ -98,7 +98,9 @@ void HieuChinh(CayTimKiem t, char* filename){
 	getch();	
 }
 void ThemVatTu(CayTimKiem t, char* filename){
-	getch();
+	t.createTree();
+	t.ghiFileLNR(filename);
+//	getch();
 }
 void XoaVatTu(CayTimKiem t, char* filename){
 	getch();
@@ -108,7 +110,7 @@ int MASO_NHANVIEN=-1;
 
 int main (){ system ("cls");
  char fileNhanVien[80]="NhanVien.Dat";
- char fileVatTu[80]="vattu.dat";
+ char fileVatTu[80]="VatTu.txt";
  char ten[20]; 
   int chon,vitri;  
   DanhSachNhanVien ds; //Cau Truc Du lieu Luu Danh Sach NhanVien
@@ -123,7 +125,7 @@ int main (){ system ("cls");
  if(MASO_NHANVIEN!=-1)
  	check=CheckPwd();
  if(check==1){
- 
+ 	t= readFromFile(fileVatTu);
  do
   {
     chon = MenuDong (thucdon);

@@ -4,7 +4,7 @@
 #include <fstream>
 #include <conio.h>
 #include <cstdio>
-
+#include <sstream>
 using namespace std;
 
 #define HDlength 100
@@ -524,7 +524,7 @@ void DanhSachNhanVien::Doc(char* filename){
 
 //input: Danh sach nhan vien
 //		MaSo Nhan vien
-//		PASSWORD (dinh nghia trong mylib.h; #define PASSWORD "abcdef")
+//		PASSWORD (dinh nghia trong mylib.h; #define PASSWORD "abc")
 //output: Ma so nhan vien co trong danh sach
 
 int DanhSachNhanVien::Login(){
@@ -650,9 +650,9 @@ public:
         Left = NULL;
         Right = NULL;
     }
-
-    void ghiDuLieu(ofstream& file) {
-        file << DuLieu.MaVatTu << " " << DuLieu.TenVatTu << " " << DuLieu.DonViTinh << " " << DuLieu.SoLuongTon << endl;
+   
+      void ghiDuLieu(ofstream& file) {
+        file << DuLieu.MaVatTu << "," << DuLieu.TenVatTu << "," << DuLieu.DonViTinh << "," << DuLieu.SoLuongTon << endl;
     }
 };
 
@@ -839,7 +839,8 @@ public:
     void ghiFileLNR(Node* p, std::ofstream& file) {
         if (p != NULL) {
             ghiFileLNR(p->Left, file);
-            p->ghiDuLieu(file);
+           // p->ghiDuLieu(file);
+            file<<p->DuLieu.MaVatTu<<","<<p->DuLieu.TenVatTu<<","<<p->DuLieu.DonViTinh<<","<<p->DuLieu.SoLuongTon<<endl;
             ghiFileLNR(p->Right, file);
         }
     }
@@ -847,7 +848,80 @@ public:
     void ghiFileLNR(std::ofstream& file) {
         ghiFileLNR(root, file);
     }
+    
+    void ghiFileLNR(char* filename) {
+    	ofstream file(filename,ios::out);
+        ghiFileLNR(root, file);
+        file.close();
+    }
 };
+
+void readVatTuFromFile(char* filename) {
+    ifstream inputFile(filename, ios::binary);
+
+    if (!inputFile) {
+        std::cerr << "Error opening the file for reading." << std::endl;
+        return;
+    }
+
+    VatTu v;
+    cout << "Thong tin vat tu: " << endl;
+    while (inputFile >> v.MaVatTu >> v.TenVatTu >> v.DonViTinh >> v.SoLuongTon) {
+        cout << "Ma vat tu: " << v.MaVatTu << "-Ten vat tu: " << v.TenVatTu << " -Don vi tinh: " << v.DonViTinh << " -So luong ton: " << v.SoLuongTon;
+        cout << endl;
+    }
+    inputFile.close();
+}
+
+int docFileVatTu(char* filename) {
+    ifstream file_obj(filename);
+
+    if (!file_obj) {
+        cerr << "Error opening file for reading: " << filename << endl;
+        return 1;
+    }
+
+    VatTu obj;
+
+    while (file_obj >> obj.MaVatTu >> obj.TenVatTu >> obj.DonViTinh >> obj.SoLuongTon) {
+        cout << "Ma VT: " << obj.MaVatTu << "; Ten VT: " << obj.TenVatTu << "; Don vi tinh: " << obj.DonViTinh << "; So luong ton: " << obj.SoLuongTon << endl;
+    }
+
+    file_obj.close();
+
+    return 0;
+}
+
+CayTimKiem readFromFile(const std::string& filename) {
+    CayTimKiem cayVatTu;
+    ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        std::cerr << "Loi mo file" << std::endl;
+        return cayVatTu;
+    }
+
+    string line;
+    while (std::getline(inFile, line)) {
+        std::stringstream ss(line);
+        string smavt,ten, dvt,ssoluong;
+
+        getline(ss,smavt,',');
+        getline(ss,ten,',');
+        getline(ss,dvt,',');
+        getline(ss,ssoluong,',');
+        int mavt=stoi(smavt);//doi chuoi thanh int
+        double soluong=stod(ssoluong);//doi chuoi thanh double
+
+        char* t = const_cast<char*>(ten.c_str());
+        char* d = const_cast<char*>(dvt.c_str());
+        VatTu v(mavt,t,d,soluong);
+        cayVatTu.insertNode(v);
+    }
+
+    inFile.close();
+
+    return cayVatTu;
+}
 
 
 

@@ -1,6 +1,5 @@
-14509088,,,500
 7,Sua,Hop,41
-10,duong mia,kg,500
-12,Dau xanh ca,kg,600
-15, bot lua mi, kg,800
-20,dau do,kg,1000
+8,Vat tu 8,kg,500
+10,vatr tu 10,kg,500
+15,vat tu 15,kg,100
+19,vat tu 19,kg,5013
