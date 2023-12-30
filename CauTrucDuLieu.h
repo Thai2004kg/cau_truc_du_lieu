@@ -365,26 +365,40 @@ NhanVien::NhanVien(int maNV, char* ho, char*ten, char* phai){
 	strcpy(Ten,ten);
 	strcpy(Phai,phai);
 }
-void NhanVien::NhapNhanVien(){
-		int maNV;
-		char ho[MaxNV],ten[MaxNV],phai[MaxNV];
-		cout<<"nhap ma nhan  vien:";
-		cin>>maNV;
-		cin.ignore();
-		cout<<"Ho: ";
-		cin.getline(ho,sizeof(ho));
+void NhanVien::NhapNhanVien() {
+    int maNV;
+    char ho[MaxNV], ten[MaxNV], phai[MaxNV];
 
-		cout<<"Ten: ";
-		cin.getline(ten,sizeof(ten));
-	
-		cout<<"Gioi tinh: ";
-		cin.getline(phai,sizeof(phai)) ;
-		
-		this->MaNV=maNV;
-		strcpy(this->Ho,ho);
-		strcpy(this->Ten,ten);
-		strcpy(this->Phai,phai);
-	}
+    cout << "Nhap ma nhan vien: ";
+    cin >> maNV;
+    cin.ignore();
+
+    // Yêu c?u nh?p l?i n?u h? (ho?c tên) tr?ng
+    do {
+        cout << "Ho: ";
+        cin.getline(ho, sizeof(ho));
+        if (strlen(ho) == 0) {
+            cout << "Loi: Ho khong duoc de trong. Vui long nhap lai.\n";
+        }
+    } while (strlen(ho) == 0);
+
+    do {
+        cout << "Ten: ";
+        cin.getline(ten, sizeof(ten));
+        if (strlen(ten) == 0) {
+            cout << "Loi: Ten khong duoc de trong. Vui long nhap lai.\n";
+        }
+    } while (strlen(ten) == 0);
+
+    cout << "Gioi tinh: ";
+    cin.getline(phai, sizeof(phai));
+
+    this->MaNV = maNV;
+    strcpy(this->Ho, ho);
+    strcpy(this->Ten, ten);
+    strcpy(this->Phai, phai);
+}
+
 void NhanVien::HienThi(){
 		cout << "ma nhan vien: " << MaNV << " ";
         cout << "Ho: " << Ho << " ";
@@ -667,7 +681,7 @@ public:
         root = NULL;
     }
 
-    Node* insertNode(Node* p, int m, char* t, char* d, double s) {
+   /* Node* insertNode(Node* p, int m, char* t, char* d, double s) {
         if (p == NULL) {
             return new Node(m, t, d, s);
         }
@@ -676,7 +690,7 @@ public:
         else if (m > p->DuLieu.MaVatTu)
             p->Right = insertNode(p->Right, m, t, d, s);
         return p;
-    }
+    }*/
 
     Node* insertNode(Node* p, VatTu v) {
         if (p == NULL) {
@@ -748,10 +762,10 @@ public:
     bool deleteNode(int ma_vt) {
         Node* p = deleteNode(root, ma_vt);
         if (p == NULL) {
-            cout << "No VatTu found with ID " << ma_vt << endl;
+            cout << "khong tim thay vat tu co ma " << ma_vt << endl;
             return false;
         }
-        cout << "VatTu with ID " << ma_vt << " has been deleted." << endl;
+        cout << "VatTu co ma " << ma_vt << " da bi xoa." << endl;
         return true;
     }
 
@@ -847,6 +861,31 @@ public:
     void ghiFileLNR(std::ofstream& file) {
         ghiFileLNR(root, file);
     }
+   Node* insertNodeTen(Node* p, VatTu v) {
+    if (p == NULL) {
+        return new Node(v);
+    }
+
+    int compareResult = strcmp(v.TenVatTu, p->DuLieu.TenVatTu);
+
+    if (compareResult < 0) {
+        p->Left = insertNode(p->Left, v);
+    } else if (compareResult > 0) {
+        p->Right = insertNode(p->Right, v);
+    } else {
+        return NULL;  
+    }
+
+    return p;
+}
+
+void insertNodeTen(VatTu v) {
+    Node* p = insertNode(root, v);
+    if (p == NULL)
+        cout << "ten vat tu bi trung" << endl;
+    else
+        root = p;
+}
 };
 
 

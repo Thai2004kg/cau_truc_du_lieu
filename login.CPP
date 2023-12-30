@@ -146,6 +146,7 @@ int main (){ system ("cls");
 	}
 	case 8:{
 		ThemVatTu(t,fileVatTu);
+		
 		break;
 	}
 	case 9:{
