@@ -4,12 +4,20 @@
 #include <fstream>
 #include <conio.h>
 #include <cstdio>
-
+#include <sstream>
 using namespace std;
 
 #define HDlength 100
 #define MaxNV 200
-#define maxlength 255
+#define maxlength 80
+
+void HienThiChuoi(char* st, int size){
+	for(int i=0;i<strlen(st);i++)
+		cout<< st[i];
+	for(int i=0;i<size-strlen(st);i++)
+		cout<<" "; //ghi khoang trong ra man hinh khi chuoi st, ngan hon do dai can in
+}
+
 class CTHD {
 public:
     int MaVT;
@@ -365,40 +373,26 @@ NhanVien::NhanVien(int maNV, char* ho, char*ten, char* phai){
 	strcpy(Ten,ten);
 	strcpy(Phai,phai);
 }
-void NhanVien::NhapNhanVien() {
-    int maNV;
-    char ho[MaxNV], ten[MaxNV], phai[MaxNV];
+void NhanVien::NhapNhanVien(){
+		int maNV;
+		char ho[MaxNV],ten[MaxNV],phai[MaxNV];
+		cout<<"nhap ma nhan  vien:";
+		cin>>maNV;
+		cin.ignore();
+		cout<<"Ho: ";
+		cin.getline(ho,sizeof(ho));
 
-    cout << "Nhap ma nhan vien: ";
-    cin >> maNV;
-    cin.ignore();
-
-    // Yêu c?u nh?p l?i n?u h? (ho?c tên) tr?ng
-    do {
-        cout << "Ho: ";
-        cin.getline(ho, sizeof(ho));
-        if (strlen(ho) == 0) {
-            cout << "Loi: Ho khong duoc de trong. Vui long nhap lai.\n";
-        }
-    } while (strlen(ho) == 0);
-
-    do {
-        cout << "Ten: ";
-        cin.getline(ten, sizeof(ten));
-        if (strlen(ten) == 0) {
-            cout << "Loi: Ten khong duoc de trong. Vui long nhap lai.\n";
-        }
-    } while (strlen(ten) == 0);
-
-    cout << "Gioi tinh: ";
-    cin.getline(phai, sizeof(phai));
-
-    this->MaNV = maNV;
-    strcpy(this->Ho, ho);
-    strcpy(this->Ten, ten);
-    strcpy(this->Phai, phai);
-}
-
+		cout<<"Ten: ";
+		cin.getline(ten,sizeof(ten));
+	
+		cout<<"Gioi tinh: ";
+		cin.getline(phai,sizeof(phai)) ;
+		
+		this->MaNV=maNV;
+		strcpy(this->Ho,ho);
+		strcpy(this->Ten,ten);
+		strcpy(this->Phai,phai);
+	}
 void NhanVien::HienThi(){
 		cout << "ma nhan vien: " << MaNV << " ";
         cout << "Ho: " << Ho << " ";
@@ -538,7 +532,7 @@ void DanhSachNhanVien::Doc(char* filename){
 
 //input: Danh sach nhan vien
 //		MaSo Nhan vien
-//		PASSWORD (dinh nghia trong mylib.h; #define PASSWORD "abcdef")
+//		PASSWORD (dinh nghia trong mylib.h; #define PASSWORD "abc")
 //output: Ma so nhan vien co trong danh sach
 
 int DanhSachNhanVien::Login(){
@@ -605,10 +599,15 @@ public:
     }
 
     void hienThi() {
-        cout << "Ma Vat Tu: " << MaVatTu << ", ";
-        cout << "Ten Vat Tu: " << TenVatTu << ", ";
-        cout << "Don vi tinh: " << DonViTinh << ", ";
-        cout << "So luong ton: " << SoLuongTon << endl;
+    	cout<<endl;
+        cout << "  " << MaVatTu << "\t";
+    //    cout << "  " << TenVatTu  << "";
+    	HienThiChuoi(TenVatTu,20);
+    	cout<<"\t";
+    //cout << " " << DonViTinh << "";
+    	HienThiChuoi(DonViTinh,15);
+    	cout<<"\t";
+        cout << " " << SoLuongTon;
     }
 
     int nhapVatTu() {
@@ -664,9 +663,9 @@ public:
         Left = NULL;
         Right = NULL;
     }
-
-    void ghiDuLieu(ofstream& file) {
-        file << DuLieu.MaVatTu << " " << DuLieu.TenVatTu << " " << DuLieu.DonViTinh << " " << DuLieu.SoLuongTon << endl;
+   
+      void ghiDuLieu(ofstream& file) {
+        file << DuLieu.MaVatTu << "," << DuLieu.TenVatTu << "," << DuLieu.DonViTinh << "," << DuLieu.SoLuongTon << endl;
     }
 };
 
@@ -681,7 +680,7 @@ public:
         root = NULL;
     }
 
-   /* Node* insertNode(Node* p, int m, char* t, char* d, double s) {
+    Node* insertNode(Node* p, int m, char* t, char* d, double s) {
         if (p == NULL) {
             return new Node(m, t, d, s);
         }
@@ -690,7 +689,7 @@ public:
         else if (m > p->DuLieu.MaVatTu)
             p->Right = insertNode(p->Right, m, t, d, s);
         return p;
-    }*/
+    }
 
     Node* insertNode(Node* p, VatTu v) {
         if (p == NULL) {
@@ -762,14 +761,14 @@ public:
     bool deleteNode(int ma_vt) {
         Node* p = deleteNode(root, ma_vt);
         if (p == NULL) {
-            cout << "khong tim thay vat tu co ma " << ma_vt << endl;
+            cout << "No VatTu found with ID " << ma_vt << endl;
             return false;
         }
-        cout << "VatTu co ma " << ma_vt << " da bi xoa." << endl;
+        cout << "VatTu with ID " << ma_vt << " has been deleted." << endl;
         return true;
     }
 
-    Node* deleteNode(Node* p, int ma_vt) {
+  Node* deleteNode(Node* p, int ma_vt) {
         if (p == NULL) {
             return p;
         }
@@ -778,7 +777,7 @@ public:
             p->Left = deleteNode(p->Left, ma_vt);
         } else if (ma_vt > p->DuLieu.MaVatTu) {
             p->Right = deleteNode(p->Right, ma_vt);
-        } else {
+        } else { //p.DuLieju.MaVatTu==ma_vt
             if (p->Left == NULL) {
                 Node* temp = p->Right;
                 delete p;
@@ -789,15 +788,15 @@ public:
                 return temp;
             }
 
-            Node* temp = minValueNode(p->Right);
-            p->DuLieu = temp->DuLieu;
-            p->Right = deleteNode(p->Right, temp->DuLieu.MaVatTu);
+            Node* temp = minValueNode(p->Right);//Tim nut nho nhat (trai) cua cay con phai
+            p->DuLieu = temp->DuLieu;//thay the cho nut can xoa
+            p->Right = deleteNode(p->Right, temp->DuLieu.MaVatTu);//xoa nut nho nhat tren cay con phai
         }
 
         return p;
     }
 
-    Node* minValueNode(Node* node) {
+  Node* minValueNode(Node* node) {
         Node* current = node;
         while (current->Left != NULL) {
             current = current->Left;
@@ -845,7 +844,6 @@ public:
     }
 
     void LNR() {
-        cout << "Duyet cay LNR \n";
         LNR(root);
         cout << endl;
     }
@@ -853,7 +851,8 @@ public:
     void ghiFileLNR(Node* p, std::ofstream& file) {
         if (p != NULL) {
             ghiFileLNR(p->Left, file);
-            p->ghiDuLieu(file);
+           // p->ghiDuLieu(file);
+            file<<p->DuLieu.MaVatTu<<","<<p->DuLieu.TenVatTu<<","<<p->DuLieu.DonViTinh<<","<<p->DuLieu.SoLuongTon<<endl;
             ghiFileLNR(p->Right, file);
         }
     }
@@ -861,32 +860,138 @@ public:
     void ghiFileLNR(std::ofstream& file) {
         ghiFileLNR(root, file);
     }
-   Node* insertNodeTen(Node* p, VatTu v) {
-    if (p == NULL) {
-        return new Node(v);
+    
+    void ghiFileLNR(char* filename) {
+    	ofstream file(filename,ios::out);
+        ghiFileLNR(root, file);
+        file.close();
     }
+    Node* insertNodeTen(Node* p, VatTu v) {
+    	if (p == NULL) {
+        	return new Node(v);
+    	}
 
-    int compareResult = strcmp(v.TenVatTu, p->DuLieu.TenVatTu);
+    	int compareResult = strcmp(v.TenVatTu, p->DuLieu.TenVatTu);
 
-    if (compareResult < 0) {
-        p->Left = insertNode(p->Left, v);
+    	if (compareResult < 0) {
+       		p->Left = insertNodeTen(p->Left, v);
     } else if (compareResult > 0) {
-        p->Right = insertNode(p->Right, v);
+        	p->Right = insertNodeTen(p->Right, v);
     } else {
-        return NULL;  
+        	return NULL;  
     }
 
     return p;
 }
 
 void insertNodeTen(VatTu v) {
-    Node* p = insertNode(root, v);
+    Node* p = insertNodeTen(root, v);
     if (p == NULL)
         cout << "ten vat tu bi trung" << endl;
     else
         root = p;
 }
+
+
+
+
 };
 
+void readVatTuFromFile(char* filename) {
+    ifstream inputFile(filename, ios::binary);
 
+    if (!inputFile) {
+        std::cerr << "Error opening the file for reading." << std::endl;
+        return;
+    }
+
+    VatTu v;
+    cout << "Thong tin vat tu: " << endl;
+    while (inputFile >> v.MaVatTu >> v.TenVatTu >> v.DonViTinh >> v.SoLuongTon) {
+        cout << "Ma vat tu: " << v.MaVatTu << "-Ten vat tu: " << v.TenVatTu << " -Don vi tinh: " << v.DonViTinh << " -So luong ton: " << v.SoLuongTon;
+        cout << endl;
+    }
+    inputFile.close();
+}
+
+int docFileVatTu(char* filename) {
+    ifstream file_obj(filename);
+
+    if (!file_obj) {
+        cerr << "Error opening file for reading: " << filename << endl;
+        return 1;
+    }
+
+    VatTu obj;
+
+    while (file_obj >> obj.MaVatTu >> obj.TenVatTu >> obj.DonViTinh >> obj.SoLuongTon) {
+        cout << "Ma VT: " << obj.MaVatTu << "; Ten VT: " << obj.TenVatTu << "; Don vi tinh: " << obj.DonViTinh << "; So luong ton: " << obj.SoLuongTon << endl;
+    }
+
+    file_obj.close();
+
+    return 0;
+}
+
+CayTimKiem readFromFileByTen(const std::string& filename) {
+    CayTimKiem cayVatTu;
+    ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        std::cerr << "Loi mo file" << std::endl;
+        return cayVatTu;
+    }
+
+    string line;
+    while (std::getline(inFile, line)) {
+        std::stringstream ss(line);
+        string smavt,ten, dvt,ssoluong;
+
+        getline(ss,smavt,',');
+        getline(ss,ten,',');
+        getline(ss,dvt,',');
+        getline(ss,ssoluong,',');
+        int mavt=stoi(smavt);//doi chuoi thanh int
+        double soluong=stod(ssoluong);//doi chuoi thanh double
+
+        char* t = const_cast<char*>(ten.c_str());//doi kieu string sang mang char
+        char* d = const_cast<char*>(dvt.c_str());
+        VatTu v(mavt,t,d,soluong);
+        cayVatTu.insertNodeTen(v);
+    }
+
+    inFile.close();
+
+    return cayVatTu;
+}
+    
+    CayTimKiem readFromFileByMa(const std::string& filename) {
+    CayTimKiem cayVatTu;
+    ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        std::cerr << "Loi mo file" << std::endl;
+        return cayVatTu;
+    }
+
+    string line;
+    while (std::getline(inFile, line)) {
+        std::stringstream ss(line);
+        string smavt,ten, dvt,ssoluong;
+
+        getline(ss,smavt,',');
+        getline(ss,ten,',');
+        getline(ss,dvt,',');
+        getline(ss,ssoluong,',');
+        int mavt=stoi(smavt);//doi chuoi thanh int
+        double soluong=stod(ssoluong);//doi chuoi thanh double
+
+        char* t = const_cast<char*>(ten.c_str());//doi kieu string sang mang char
+        char* d = const_cast<char*>(dvt.c_str());
+        VatTu v(mavt,t,d,soluong);
+        cayVatTu.insertNode(v);
+    }
+
+    inFile.close();
+
+    return cayVatTu;
+}
 

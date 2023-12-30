@@ -75,7 +75,9 @@ do {
 
 
 void LietKeVatTu(CayTimKiem t, char* filename){
-			t.createTree(filename);
+			//t.createTree(filename);
+			cout<<"Ma Vat Tu | Ten Vat Tu | Don vi tinh | So luong ton";
+			t=readFromFileByTen(filename);
 			t.LNR();
 			getch();
 }
@@ -98,9 +100,28 @@ void HieuChinh(CayTimKiem t, char* filename){
 	getch();	
 }
 void ThemVatTu(CayTimKiem t, char* filename){
-	getch();
+	t=readFromFileByMa(filename);
+	cout<<"Ma VT| Ten Vat Tu  | Don vi tinh | So luong ton" << endl;
+	t.LNR();
+	t.createTree();
+	t.ghiFileLNR(filename);
+//	getch();
 }
 void XoaVatTu(CayTimKiem t, char* filename){
+	system ("cls");
+	
+	//doc tu file, tao cay tiem kiem t, theo ma vat tu
+	t=readFromFileByMa(filename);
+	
+	//xoa
+	int ma_vt;
+	cout<<"nhap ma vat tu can xoa: ";
+	cin>>ma_vt;
+	if(t.deleteNode(t.root,ma_vt)==NULL)
+		cout<<"Ma vat tu: "<<ma_vt<<" "<<" khong ton tai ";
+	
+	//ghi lai file
+	t.ghiFileLNR(filename);
 	getch();
 }
 
@@ -108,7 +129,7 @@ int MASO_NHANVIEN=-1;
 
 int main (){ system ("cls");
  char fileNhanVien[80]="NhanVien.Dat";
- char fileVatTu[80]="vattu.dat";
+ char fileVatTu[80]="VatTu.txt";
  char ten[20]; 
   int chon,vitri;  
   DanhSachNhanVien ds; //Cau Truc Du lieu Luu Danh Sach NhanVien
@@ -123,11 +144,12 @@ int main (){ system ("cls");
  if(MASO_NHANVIEN!=-1)
  	check=CheckPwd();
  if(check==1){
- 
+ //	t= readFromFile(fileVatTu);
  do
   {
     chon = MenuDong (thucdon);
     system ("cls");
+    //nhanvien
     switch (chon ){
     case 1: ds.hienThi(); break;
     case 2: ds.searchTen(); break;
@@ -136,8 +158,9 @@ int main (){ system ("cls");
     case 4: ds.XoaNhanVien(); 
     		break;
     case 5: ds.Luu(fileNhanVien); break;
+    //vat tu
     case 6: {
-		LietKeVatTu(t,fileVatTu);
+		LietKeVatTu(t,fileVatTu);//Cay Tim kiem nhi phan theo ten
 		break;
 	}
 	case 7:{
@@ -145,11 +168,11 @@ int main (){ system ("cls");
 		break;
 	}
 	case 8:{
-		ThemVatTu(t,fileVatTu);
-		
+		ThemVatTu(t,fileVatTu);//cay tim kiem nhi phan theo ma
 		break;
 	}
 	case 9:{
+		
 		XoaVatTu(t,fileVatTu);
 	
 	
