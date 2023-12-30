@@ -758,17 +758,17 @@ public:
             cout << "ma vat tu khong ton tai" << endl;
     }
 
-    bool deleteNode(int ma_vt) {
+ bool deleteNode(int ma_vt) {
         Node* p = deleteNode(root, ma_vt);
         if (p == NULL) {
-            cout << "No VatTu found with ID " << ma_vt << endl;
+            cout << "Khong tim thay ma vat tu " << ma_vt << endl;
             return false;
         }
-        cout << "VatTu with ID " << ma_vt << " has been deleted." << endl;
+        cout << "Vat tu co ma " << ma_vt << " da duoc xoa." << endl;
         return true;
     }
 
-  Node* deleteNode(Node* p, int ma_vt) {
+Node* deleteNode(Node* p, int ma_vt) {
         if (p == NULL) {
             return p;
         }
@@ -789,12 +789,19 @@ public:
             }
 
             Node* temp = minValueNode(p->Right);//Tim nut nho nhat (trai) cua cay con phai
-            p->DuLieu = temp->DuLieu;//thay the cho nut can xoa
+            //p->DuLieu = temp->DuLieu;//thay the cho nut can xoa
+            p->DuLieu.MaVatTu=temp->DuLieu.MaVatTu;
+            
+			strcpy(p->DuLieu.TenVatTu,temp->DuLieu.TenVatTu);
+            
+            strcpy(p->DuLieu.DonViTinh,temp->DuLieu.DonViTinh);
+            p->DuLieu.SoLuongTon=temp->DuLieu.SoLuongTon;
             p->Right = deleteNode(p->Right, temp->DuLieu.MaVatTu);//xoa nut nho nhat tren cay con phai
         }
 
         return p;
     }
+    
 
   Node* minValueNode(Node* node) {
         Node* current = node;
@@ -803,6 +810,7 @@ public:
         }
         return current;
     }
+    
 
     int createTree() {
         while (1) {

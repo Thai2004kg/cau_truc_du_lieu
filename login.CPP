@@ -83,19 +83,11 @@ void LietKeVatTu(CayTimKiem t, char* filename){
 }
 
 void HieuChinh(CayTimKiem t, char* filename){
-	
-	
-	 ofstream file_obj;
-     file_obj.open(filename, ios::out | ios::binary);
-
-        if (!file_obj) {
-            cerr << "Loi mo file: " << filename << endl;
-            getch();
-         return ;
-        }
-	
+	t=readFromFileByMa(filename);
+	cout<<"Ma VT| Ten Vat Tu  | Don vi tinh | So luong ton" << endl;
+	t.LNR();
 	t.inputUpdateVatTu();
-	t.ghiFileLNR(file_obj);
+	t.ghiFileLNR(filename);
 	cout<<"Hieu chinh thanh cong!";
 	getch();	
 }
@@ -117,9 +109,8 @@ void XoaVatTu(CayTimKiem t, char* filename){
 	int ma_vt;
 	cout<<"nhap ma vat tu can xoa: ";
 	cin>>ma_vt;
-	if(t.deleteNode(t.root,ma_vt)==NULL)
-		cout<<"Ma vat tu: "<<ma_vt<<" "<<" khong ton tai ";
-	
+	t.deleteNode(ma_vt);
+		
 	//ghi lai file
 	t.ghiFileLNR(filename);
 	getch();

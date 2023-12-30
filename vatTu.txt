@@ -1,5 +1,5 @@
-3,Muoi,kg,4
+1,Duong phen,kg,34
+4,Bot Ngot ajino,Bao,43
 7,Duong,kg,34
-8,Lua mi,bao,232
 12,Gao st25,bao,54
-14,Banh mi,cai,4534
+23,Gao nep,Bao,33
