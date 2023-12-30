@@ -119,7 +119,7 @@ void XoaVatTu(CayTimKiem t, char* filename){
 int MASO_NHANVIEN=-1;
 
 int main (){ system ("cls");
- char fileNhanVien[80]="NhanVien.Dat";
+ char fileNhanVien[80]="NhanVien.txt";
  char fileVatTu[80]="VatTu.txt";
  char ten[20]; 
   int chon,vitri;  

@@ -484,19 +484,21 @@ void DanhSachNhanVien::SapXep(){
 }
 
 void DanhSachNhanVien::Luu(char* filename){
-	ofstream outstream;
-	outstream.open(filename,ios::binary);
-	if(outstream.fail()){
+	
+ 	ofstream file(filename,ios::out);
+	if(file.fail()){
 		cout<<"khong mo duoc file";
-		outstream.clear();
+		file.clear();
 	}
 	else{
-		for (int i=0;i<SoNV;i++)
-			outstream.write(reinterpret_cast<const char*>(&dsnv[i]),sizeof(NhanVien));
+		for (int i=0;i<SoNV;i++){
+			 file<<dsnv[i].MaNV<<","<<dsnv[i].Ho<<","<<dsnv[i].Ten<<","<<dsnv[i].Phai<<endl;
+		}
 		
 		cout<<"ghi thanh cong vao tep "<<filename;
-		outstream.close();
+		file.close();
 	}
+
 }
 
 void DanhSachNhanVien::them(NhanVien nv){//them cuoi ds
@@ -505,28 +507,28 @@ void DanhSachNhanVien::them(NhanVien nv){//them cuoi ds
 }
 void DanhSachNhanVien::Doc(char* filename){
 
-	// Create an input file stream
-    ifstream file_obj;
-
-    // Open the file in input binary mode
-    file_obj.open(filename, ios::in | ios::binary);
-
-    // Check if the file was successfully opened
-    if (!file_obj) {
-        cerr << "Loi mo file: " << filename << endl;
-        return; // Return an error code to indicate failure
+    ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        std::cerr << "Loi mo file" << std::endl;
     }
 
-    // Object of class VatTu to store data read from the file
-    NhanVien obj;
-
-    // Read data from the file into the object "obj"
-    while (file_obj.read((char*)&obj, sizeof(NhanVien))) {
-       them(obj);
+    string line;
+    
+    while (std::getline(inFile, line)) {
+        std::stringstream ss(line);
+        string smanv,sho,sten,sphai;
+        getline(ss,smanv,',');
+        getline(ss,sho,',');
+        getline(ss,sten,',');
+        getline(ss,sphai,',');
+        int maNV=stoi(smanv);//doi chuoi thanh int
+        char* t = const_cast<char*>(sten.c_str());//doi kieu string sang mang char
+        char* h = const_cast<char*>(sho.c_str());
+        char* p = const_cast<char*>(sphai.c_str());
+       	NhanVien nv(maNV,h,t,p);
+       	them(nv);
     }
-
-    // Close the file. It's good practice to close it after opening.
-    file_obj.close();
+    inFile.close();
 }
 
 
@@ -554,9 +556,11 @@ return maNV;
 
 	
 void DanhSachNhanVien::XoaNhanVien() {
-	int maso;
+ 
+  int maso;
   cout << "nhap ma nhan vien can xoa: ";
   cin >> maso;
+  cin.ignore();
   int vitri = searchMaNV(maso);
   if (vitri != -1) {
     cout << "da xoa nhan vien: ";
