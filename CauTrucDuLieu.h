@@ -52,7 +52,7 @@ class DanhSachChiTietHoaDon{
 	void insertHead(CTHD d);
 	void taoDanhSach();
 	void hienThi();
-	void Luu(char* filename);
+	void Luu(int SoHoaDon,char* filename);
 	void Doc(char* filename);
 	
 };
@@ -85,7 +85,7 @@ public:
 void insertHead(HoaDon d);
 void taoDanhSach();
 void hienThi();
-void Luu(char* filename);
+void Luu(int manv, char* filename);
 void Doc(char* filename);
 };
 
@@ -197,7 +197,7 @@ public:
 				ct.nhapChiTietHoaDon();
 				insertHead(ct);
 		
-		cout<<"tiep tuc?(y): ";
+		cout<<"tiep tuc nhap chi tiet hoa don?(y): ";
 		cin>>t;
 	}
 		while(t=='y');
@@ -211,20 +211,24 @@ public:
 			current=current->next;
 		}
 	}
-	void DanhSachChiTietHoaDon::Luu(char* filename) {
-        ofstream file_out(filename, ios::binary);
-        if (!file_out) {
-            cerr << "khong the mo tep: " << filename << endl;
-            return;
-        }
+	//Luu chi tiet hoa don, gom co So Hoa Don
+	void DanhSachChiTietHoaDon::Luu(int SoHoaDon,char* filename) {
+		 
+    	std::ofstream outputFile(filename);
 
+    // Check if the file is successfully opened
+    if (!outputFile.is_open()) {
+        std::cerr << "Loi mo file " << std::endl;
+        return; 
+    }
+    
         CTHDNode* current = head;
         while (current != NULL) {
-            file_out.write(reinterpret_cast<const char*>(&current->DuLieu), sizeof(CTHD));
+           outputFile<<SoHoaDon<<","<<current->DuLieu.MaVT<<","<<current->DuLieu.SoLuong<<","<<current->DuLieu.DonGia<<","<<current->DuLieu.VAT<<endl;
             current = current->next;
         }
 
-        file_out.close();
+        outputFile.close();
         cout << "ghi thanh cong " << filename << endl;
     }
     void DanhSachChiTietHoaDon::Doc(char* filename) {
@@ -270,6 +274,7 @@ public:
         while (nhapLai) {
             cout << "Nhap Loai (X/N): ";
             cin >> Loai;
+           // Loai=toupper(Loai);
 
             if (strcmp(Loai, "X") == 0 || strcmp(Loai, "N") == 0) {
                 nhapLai = false;
@@ -314,7 +319,7 @@ void DSHoaDon::taoDanhSach(){
 		hd.nhapHoaDon();
 		insertHead(hd);
 		
-		cout<<"tiep tuc?(y): ";
+		cout<<"tiep tuc nhap hoa don ?(y): ";
 		cin>>t;
 	}
 		while(t=='y');
@@ -327,20 +332,24 @@ void DSHoaDon::taoDanhSach(){
 			current=current->next;
 		}
 		}
-	void DSHoaDon::Luu(char* filename) {
-        ofstream file_out(filename, ios::binary);
-        if (!file_out) {
-            cerr << "khong the mo tep: " << filename << endl;
-            return;
-        }
+	void DSHoaDon::Luu(int manv, char* filename) {
+        
+		// Open a file for writing
+    std::ofstream outputFile(filename);
 
+    // Check if the file is successfully opened
+    if (!outputFile.is_open()) {
+        cerr << "Loi mo file!" << filename<<endl;
+        return; // Return an error code
+    }
+		
         HoaDonNode* current = head;
         while (current != NULL) {
-            file_out.write(reinterpret_cast<const char*>(&current->data), sizeof(HoaDon));
+            outputFile<<current->data.SoHD<<","<<current->data.NgayLap<<","<<current->data.Loai<<","<<manv<<endl;
             current = current->next;
         }
 
-        file_out.close();
+        outputFile.close();
         cout << "ghi thanh cong: " << filename << endl;
     }
     
@@ -373,26 +382,34 @@ NhanVien::NhanVien(int maNV, char* ho, char*ten, char* phai){
 	strcpy(Ten,ten);
 	strcpy(Phai,phai);
 }
-void NhanVien::NhapNhanVien(){
-		int maNV;
-		char ho[MaxNV],ten[MaxNV],phai[MaxNV];
-		cout<<"nhap ma nhan  vien:";
-		cin>>maNV;
-		cin.ignore();
-		cout<<"Ho: ";
-		cin.getline(ho,sizeof(ho));
+void NhanVien::NhapNhanVien() {
+    int maNV;
+    char ho[MaxNV], ten[MaxNV], phai[MaxNV];
+    cout << "Nhap ma nhan vien: ";
+    cin >> maNV;
+    do {
+        cout << "Ho: ";
+        cin.ignore();
+        cin.getline(ho, sizeof(ho));
+        if (strlen(ho) == 0) {
+            cout << "Ho khong duoc bo trong. Vui long nhap lai.\n";
+        }
+    } while (strlen(ho) == 0);
+    do {
+        cout << "Ten: ";
+        cin.getline(ten, sizeof(ten));
+        if (strlen(ten) == 0) {
+            cout << "Ten khong duoc bo trong. Vui long nhap lai.\n";
+        }
+    } while (strlen(ten) == 0);
+    cout << "Gioi tinh: ";
+    cin.getline(phai, sizeof(phai));
+    this->MaNV = maNV;
+    strcpy(this->Ho, ho);
+    strcpy(this->Ten, ten);
+    strcpy(this->Phai, phai);
+}
 
-		cout<<"Ten: ";
-		cin.getline(ten,sizeof(ten));
-	
-		cout<<"Gioi tinh: ";
-		cin.getline(phai,sizeof(phai)) ;
-		
-		this->MaNV=maNV;
-		strcpy(this->Ho,ho);
-		strcpy(this->Ten,ten);
-		strcpy(this->Phai,phai);
-	}
 void NhanVien::HienThi(){
 		cout << "ma nhan vien: " << MaNV << " ";
         cout << "Ho: " << Ho << " ";
@@ -426,6 +443,7 @@ void DanhSachNhanVien::nhap() {
 }
 
 void DanhSachNhanVien::hienThi(){
+	SapXep();
 	for(int i=0;i<SoNV;i++)
 		dsnv[i].HienThi();
 		
@@ -472,16 +490,18 @@ void DanhSachNhanVien::swap(NhanVien &a, NhanVien &b){
 	b=temp;
 }
 
-void DanhSachNhanVien::SapXep(){
-	for(int i=0;i<SoNV-1;i++){
-		for(int j=0;j<SoNV-i-1;j++){
-			if(dsnv[j].MaNV>dsnv[j+1].MaNV){
-				swap(dsnv[j],dsnv[j+1]);
-			}
-		}
-	}
-	
+void DanhSachNhanVien::SapXep() {
+    for (int i = 0; i < SoNV - 1; i++) {
+        for (int j = 0; j < SoNV - i - 1; j++) {
+            int compareResult = strcmp(dsnv[j].Ten, dsnv[j + 1].Ten);
+
+            if (compareResult > 0 || (compareResult == 0 && strcmp(dsnv[j].Ho, dsnv[j + 1].Ho) > 0)) {
+                swap(dsnv[j], dsnv[j + 1]);
+            }
+        }
+    }
 }
+
 
 void DanhSachNhanVien::Luu(char* filename){
 	

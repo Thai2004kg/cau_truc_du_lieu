@@ -10,8 +10,8 @@
 using namespace std;
 const int MAXLIST =20000;
 
-const int so_item = 10;
-const int dong =10;
+const int so_item = 11;
+const int dong =11;
 const int cot = 30 ;
 const int Up = 72; // Extended code 
 const int Down = 80;
@@ -25,7 +25,8 @@ char thucdon [so_item][50] = {"1. Liet ke danh sach      ",
 			                  "7. Hieu chinh vat tu        ",
 			                "8.Them vat tu         ",
 			                 "9. Xoa vat tu        ",
-							  "10. Ket thuc chuong trinh  "};
+			                 "10. Lap hoa don        ",
+							  "11. Ket thuc chuong trinh  "};
 
 int MenuDong(char td [so_item][50]){
 
@@ -116,17 +117,28 @@ void XoaVatTu(CayTimKiem t, char* filename){
 	getch();
 }
 
+
+void LapHoaDon(DSHoaDon hd, int manv, char* filename, char* fileChiTietHD){
+	hd.taoDanhSach();
+	//Luu hoa don
+	hd.Luu(manv,filename);
+	//Nhap chi tiet hoa don, luu chi tiet hoa don
+	hd.head->data.dscthd.Luu(hd.head->data.SoHD,fileChiTietHD);
+}
+
 int MASO_NHANVIEN=-1;
 
 int main (){ system ("cls");
  char fileNhanVien[80]="NhanVien.txt";
  char fileVatTu[80]="VatTu.txt";
+ char fileHoaDon[80]="HoaDon.txt";
+  char fileChitietHoaDon[80]="ChiTietHoaDon.txt";
  char ten[20]; 
   int chon,vitri;  
   DanhSachNhanVien ds; //Cau Truc Du lieu Luu Danh Sach NhanVien
  
   int masoNv; NhanVien nv; 
- 
+  DSHoaDon hd;
   CayTimKiem t; // Cau Truc du lieu Cay Luu thong tin VatTu
   
  ds.Doc(fileNhanVien);// doc filename, ghi len ds
@@ -166,6 +178,12 @@ int main (){ system ("cls");
 		
 		XoaVatTu(t,fileVatTu);
 	
+	
+		break;
+	}
+	case 10:{
+		
+		LapHoaDon(hd,MASO_NHANVIEN ,fileHoaDon,fileChitietHoaDon);	
 	
 		break;
 	}
