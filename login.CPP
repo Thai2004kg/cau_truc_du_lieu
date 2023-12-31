@@ -124,7 +124,8 @@ void LapHoaDon(DSHoaDon hd, int manv, char* filename, char* fileChiTietHD){
 	//Luu hoa don
 	hd.Luu(filename);//
 	//Nhap chi tiet hoa don, luu chi tiet hoa don
-	hd.head->data.dscthd.Luu(hd.head->data.SoHD,fileChiTietHD);
+	hd.head->data.dscthd.Doc(fileChiTietHD);
+	hd.head->data.dscthd.Luu(hd.head->data.SoHD,fileChiTietHD); // Can sua khong luu so hoa don cho tat ca giong nhau
 }
 
 int MASO_NHANVIEN=-1;

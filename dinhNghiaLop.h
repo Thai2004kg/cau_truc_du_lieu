@@ -1,35 +1,16 @@
-#include <iostream>
-#include <string>
-#include <cstring>
-#include <fstream>
-#include <conio.h>
-#include <cstdio>
-#include <sstream>
-using namespace std;
-
-#define HDlength 100
-#define MaxNV 200
-#define maxlength 80
-
-void HienThiChuoi(char* st, int size){
-	for(int i=0;i<strlen(st);i++)
-		cout<< st[i];
-	for(int i=0;i<size-strlen(st);i++)
-		cout<<" "; //ghi khoang trong ra man hinh khi chuoi st, ngan hon do dai can in
-}
-
+//ChiTietHoaDon
 class CTHD {
 public:
     int MaVT;
     int SoLuong;
     double DonGia;
     double VAT;
-    
+    int SoHD;
     CTHD();
 
-    CTHD(int maVT, int soLuong, double donGia, double vat) ;
+    CTHD(int maVT, int soLuong, double donGia, double vat, int sohd) ;
 
-    void nhapChiTietHoaDon() ;
+    void nhapChiTietHoaDon(int sohd);
 
     void hienThi();
     void update(int ma_vt, int sl, double d, double vat) ;
@@ -84,7 +65,7 @@ public:
 	HoaDonNode* head;
 	DSHoaDon();
 void insertHead(HoaDon d);
-void taoDanhSach();
+void taoDanhSach(int manv);
 void hienThi();
 void Luu(char* filename);
 void Doc(char* filename);
@@ -122,4 +103,3 @@ public:
 	void XoaNhanVien();
 };
 	
-

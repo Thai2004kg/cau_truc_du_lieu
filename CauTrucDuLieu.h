@@ -18,21 +18,22 @@ void HienThiChuoi(char* st, int size){
 		cout<<" "; //ghi khoang trong ra man hinh khi chuoi st, ngan hon do dai can in
 }
 
+//ChiTietHoaDon
 class CTHD {
 public:
     int MaVT;
     int SoLuong;
     double DonGia;
     double VAT;
-    
+    int SoHD;
     CTHD();
 
-    CTHD(int maVT, int soLuong, double donGia, double vat) ;
+    CTHD(int maVT, int soLuong, double donGia, double vat, int sohd) ;
 
-    void nhapChiTietHoaDon() ;
+    void nhapChiTietHoaDon(int sohd);
 
     void hienThi();
-    void update(int ma_vt, int sl, double d, double vat) ;
+    void update(int ma_vt, int sl, double d, double vat, int sohd) ;
                
 };
 
@@ -50,7 +51,7 @@ class DanhSachChiTietHoaDon{
 		DanhSachChiTietHoaDon();
 	
 	void insertHead(CTHD d);
-	void taoDanhSach();
+	void taoDanhSach(int sohd);
 	void hienThi();
 	void Luu(int SoHoaDon,char* filename);
 	void Doc(char* filename);
@@ -131,16 +132,18 @@ public:
         SoLuong = 0;
         DonGia = 0;
         VAT = 0;
+        SoHD=0;
     }
 
-   CTHD::CTHD(int maVT, int soLuong, double donGia, double vat) {
+   CTHD::CTHD(int maVT, int soLuong, double donGia, double vat, int sohd) {
         MaVT = maVT;
         SoLuong = soLuong;
         DonGia = donGia;
         VAT = vat;
+        SoHD=sohd;
     }
 
-    void  CTHD::nhapChiTietHoaDon() {
+    void  CTHD::nhapChiTietHoaDon(int sohd) {
     	int maVT;
     	int soLuong;
     	double donGia;
@@ -157,20 +160,23 @@ public:
 		this->SoLuong=soLuong;
 		this->DonGia=donGia;
 		this->VAT=vat;
+		this->SoHD=sohd;
     }
 
     void  CTHD::hienThi() {
         cout << "ma vat tu: " << MaVT << " ";
         cout << "so luong: " << SoLuong << " ";
         cout << "don gia: " << DonGia << " ";
-        cout << "thue VAT: " << VAT << " \n";
+        cout << "thue VAT: " << VAT<< " ";
+        cout << "So Hoa Don " << SoHD << endl;
     }
-  	void  CTHD::update(int ma_vt, int sl, double d, double vat) {
+  	void  CTHD::update(int ma_vt, int sl, double d, double vat, int sohd) {
       
             MaVT = ma_vt;
             SoLuong = sl;
         	DonGia = d;
             VAT = vat;
+            SoHD=sohd;
         }
     
 //=======================
@@ -190,12 +196,12 @@ public:
 		p->next=head;
 		head=p;
 	}
-	void DanhSachChiTietHoaDon::taoDanhSach(){
+	void DanhSachChiTietHoaDon::taoDanhSach(int sohd){
 	
 		char t;
 		do{
 				CTHD ct;
-				ct.nhapChiTietHoaDon();
+				ct.nhapChiTietHoaDon(sohd);
 				insertHead(ct);
 		
 		cout<<"tiep tuc nhap chi tiet hoa don?(y): ";
@@ -233,20 +239,37 @@ public:
         cout << "ghi thanh cong " << filename << endl;
     }
     void DanhSachChiTietHoaDon::Doc(char* filename) {
-    ifstream file_in(filename, ios::binary);
-    if (!file_in) {
-        cerr << "Khong the mo tep: " << filename << endl;
-        return;
+     ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        std::cerr << "Loi mo file" << std::endl;
+        return ;
     }
 
-    CTHD ct;
-    while (file_in.read(reinterpret_cast<char*>(&ct), sizeof(CTHD))) {
-       insertHead(ct);
-	 }	    
+    string line;
+    while (std::getline(inFile, line)) {
+        std::stringstream ss(line);
+        string ssoHD,smaVT,ssoluong, sdongia,svat;
+
+        getline(ss,ssoHD,',');
+        getline(ss,smaVT,',');
+        getline(ss,ssoluong,',');
+        getline(ss,sdongia,',');
+        getline(ss,svat,',');
+        int soHD=stoi(ssoHD);
+        int maVT=stoi(smaVT);//doi chuoi thanh int
+        int soluong=stoi(ssoluong);
+        double dongia=stod(sdongia);//doi chuoi thanh double
+        double vat=stod(svat);
+        CTHD ct(maVT,soluong,dongia,vat,soHD);
+        insertHead(ct);
+         
+	
+    }
+
+    inFile.close();
+
 	hienThi();
     
-
-    file_in.close();
     cout << "Doc thanh cong " << filename << endl;
 }
 
@@ -287,7 +310,7 @@ public:
         }
         
         cout<<"nhap chi tiet hoa don: \n";
-        dscthd.taoDanhSach();
+        dscthd.taoDanhSach(SoHD);
     }
     void HoaDon::hienThi() {
         cout << "soHD: " << SoHD << " ";
