@@ -63,8 +63,9 @@ public:
     char NgayLap[HDlength];
     char Loai[HDlength];
     DanhSachChiTietHoaDon dscthd;
+    int MaNV; //ma so nhan vien tao hoa don
 	HoaDon();
-    HoaDon(int soHD, char* ngayLap, char* loai);
+    HoaDon(int soHD, char* ngayLap, char* loai, int manv);
     void nhapHoaDon() ;
     void hienThi() ;
 
@@ -257,12 +258,14 @@ public:
 	HoaDon::HoaDon(){
 		SoHD =0;
 		strcpy(NgayLap,"");
-		strcpy(Loai,"");	
+		strcpy(Loai,"");
+		MaNV=0;	
 	}
-    HoaDon::HoaDon(int soHD, char* ngayLap, char* loai) {
+    HoaDon::HoaDon(int soHD, char* ngayLap, char* loai, int manv) {
         SoHD = soHD;
         strcpy(NgayLap, ngayLap);
         strcpy(Loai, loai);
+        MaNV=manv;
     }
 
     void HoaDon::nhapHoaDon() {
@@ -289,6 +292,7 @@ public:
         cout << "soHD: " << SoHD << " ";
         cout << "ngay lap: " << NgayLap << " ";
         cout << "loai: " << Loai << " ";
+        cout <<"Ma nhan vien tao: " <<MaNV;
 		cout<<"\n";
 		cout<<"\t";
 		dscthd.hienThi();
@@ -334,10 +338,9 @@ void DSHoaDon::taoDanhSach(){
 		}
 	void DSHoaDon::Luu(int manv, char* filename) {
         
-		// Open a file for writing
+	
     std::ofstream outputFile(filename);
 
-    // Check if the file is successfully opened
     if (!outputFile.is_open()) {
         cerr << "Loi mo file!" << filename<<endl;
         return; // Return an error code
@@ -354,19 +357,35 @@ void DSHoaDon::taoDanhSach(){
     }
     
 void DSHoaDon::Doc(char* filename) {
-    ifstream file_in(filename, ios::binary);
-    if (!file_in) {
-        cerr << "Khong the mo tep: " << filename << endl;
+   
+   
+   ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        std::cerr << "Loi mo file" << std::endl;
         return;
     }
 
-    HoaDon hd;
-    while (file_in.read(reinterpret_cast<char*>(&hd), sizeof(HoaDon))) {
+    string line;
+    while (std::getline(inFile, line)) {
+        std::stringstream ss(line);
+        string ssoHD,sNgay, sLoai,smaNV;
+
+        getline(ss,ssoHD,',');
+        getline(ss,sNgay,',');
+        getline(ss,sLoai,',');
+        getline(ss,smaNV,',');
+        int soHD=stoi(ssoHD);//doi chuoi thanh int
+		int maNV=stoi(smaNV);
+        char* cngay = const_cast<char*>(sNgay.c_str());//doi kieu string sang mang char
+        char* cloai = const_cast<char*>(sLoai.c_str());
+        HoaDon hd(soHD,cngay,cloai,maNV);
         insertHead(hd);
     }
+
+    inFile.close();
+
     hienThi();
 
-    file_in.close();
     cout << "Doc thanh cong " << filename << endl;
 }
 		
