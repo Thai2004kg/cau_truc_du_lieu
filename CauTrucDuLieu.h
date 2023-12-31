@@ -84,9 +84,9 @@ public:
 	HoaDonNode* head;
 	DSHoaDon();
 void insertHead(HoaDon d);
-void taoDanhSach();
+void taoDanhSach(int manv);
 void hienThi();
-void Luu(int manv, char* filename);
+void Luu(char* filename);
 void Doc(char* filename);
 };
 
@@ -285,6 +285,7 @@ public:
                 cout << "Loai khong hop le. Vui long nhap lai (X/N)." << endl;
             }
         }
+        
         cout<<"nhap chi tiet hoa don: \n";
         dscthd.taoDanhSach();
     }
@@ -315,12 +316,13 @@ void DSHoaDon::insertHead(HoaDon d){
 		p->next=head;
 		head=p;
 	}
-void DSHoaDon::taoDanhSach(){
+void DSHoaDon::taoDanhSach(int manv){
 	
 	char t;
 	do{
 		HoaDon hd;
 		hd.nhapHoaDon();
+		hd.MaNV=manv;
 		insertHead(hd);
 		
 		cout<<"tiep tuc nhap hoa don ?(y): ";
@@ -336,7 +338,7 @@ void DSHoaDon::taoDanhSach(){
 			current=current->next;
 		}
 		}
-	void DSHoaDon::Luu(int manv, char* filename) {
+	void DSHoaDon::Luu(char* filename) {
         
 	
     std::ofstream outputFile(filename);
@@ -348,7 +350,7 @@ void DSHoaDon::taoDanhSach(){
 		
         HoaDonNode* current = head;
         while (current != NULL) {
-            outputFile<<current->data.SoHD<<","<<current->data.NgayLap<<","<<current->data.Loai<<","<<manv<<endl;
+            outputFile<<current->data.SoHD<<","<<current->data.NgayLap<<","<<current->data.Loai<<","<<current->data.MaNV<<endl;
             current = current->next;
         }
 

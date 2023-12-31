@@ -120,9 +120,9 @@ void XoaVatTu(CayTimKiem t, char* filename){
 
 void LapHoaDon(DSHoaDon hd, int manv, char* filename, char* fileChiTietHD){
 	hd.Doc(filename);
-	hd.taoDanhSach();
+	hd.taoDanhSach(manv);
 	//Luu hoa don
-	hd.Luu(manv,filename);//
+	hd.Luu(filename);//
 	//Nhap chi tiet hoa don, luu chi tiet hoa don
 	hd.head->data.dscthd.Luu(hd.head->data.SoHD,fileChiTietHD);
 }

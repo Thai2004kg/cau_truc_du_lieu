@@ -86,7 +86,7 @@ public:
 void insertHead(HoaDon d);
 void taoDanhSach();
 void hienThi();
-void Luu(int manv, char* filename);
+void Luu(char* filename);
 void Doc(char* filename);
 };
 
