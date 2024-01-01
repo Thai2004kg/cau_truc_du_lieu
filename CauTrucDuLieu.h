@@ -11,6 +11,8 @@ using namespace std;
 #define MaxNV 200
 #define maxlength 80
 
+void CapNhatDanhMucVatTu(int mavt, char* loai,int soluong);//prototype
+
 void HienThiChuoi(char* st, int size){
 	for(int i=0;i<strlen(st);i++)
 		cout<< st[i];
@@ -51,7 +53,7 @@ class DanhSachChiTietHoaDon{
 		DanhSachChiTietHoaDon();
 	
 	void insertHead(CTHD d);
-	void taoDanhSach(int sohd);
+	void taoDanhSach(int sohd, char* loai);
 	void hienThi();
 	void Luu(char* filename);
 	void Doc(char* filename);
@@ -196,14 +198,14 @@ public:
 		p->next=head;
 		head=p;
 	}
-	void DanhSachChiTietHoaDon::taoDanhSach(int sohd){
-	
+	void DanhSachChiTietHoaDon::taoDanhSach(int sohd, char* loai){
+		//CayTimKiem cayVatTu;
 		char t;
 		do{
 				CTHD ct;
 				ct.nhapChiTietHoaDon(sohd);
 				insertHead(ct);
-		
+				CapNhatDanhMucVatTu(ct.MaVT,loai,ct.SoLuong);
 		cout<<"tiep tuc nhap chi tiet hoa don?(y): ";
 		cin>>t;
 	}
@@ -310,7 +312,7 @@ public:
         }
         
         cout<<"nhap chi tiet hoa don: \n";
-        dscthd.taoDanhSach(SoHD);
+        dscthd.taoDanhSach(SoHD, Loai);
     }
     void HoaDon::hienThi() {
         cout << "soHD: " << SoHD << " ";
@@ -747,6 +749,7 @@ public:
     CayTimKiem() {
         root = NULL;
     }
+   
 
     Node* insertNode(Node* p, int m, char* t, char* d, double s) {
         if (p == NULL) {
@@ -822,6 +825,17 @@ public:
             strcpy(p->DuLieu.TenVatTu, t);
             strcpy(p->DuLieu.DonViTinh, d);
             p->DuLieu.SoLuongTon = sl;
+        } else
+            cout << "ma vat tu khong ton tai" << endl;
+    }
+    
+     void updateNodeSoluong(int ma_vt, double sl, char* loai) {
+        Node* p = searchNode(root, ma_vt);
+        if (p != NULL) {
+        	if(strcmp(loai,"X")==0)
+            	p->DuLieu.SoLuongTon -= sl;
+            else
+            	p->DuLieu.SoLuongTon += sl;
         } else
             cout << "ma vat tu khong ton tai" << endl;
     }
@@ -968,10 +982,8 @@ void insertNodeTen(VatTu v) {
         root = p;
 }
 
+}; // End of CayTimKiem class
 
-
-
-};
 
 void readVatTuFromFile(char* filename) {
     ifstream inputFile(filename, ios::binary);
@@ -1040,7 +1052,7 @@ CayTimKiem readFromFileByTen(const std::string& filename) {
     return cayVatTu;
 }
     
-    CayTimKiem readFromFileByMa(const std::string& filename) {
+CayTimKiem readFromFileByMa(const std::string& filename) {
     CayTimKiem cayVatTu;
     ifstream inFile(filename);
     if (!inFile.is_open()) {
@@ -1070,4 +1082,16 @@ CayTimKiem readFromFileByTen(const std::string& filename) {
 
     return cayVatTu;
 }
+ 
+    void CapNhatDanhMucVatTu(int mavt, char* loai, int soluong){
+    	//Doc tep nap len cay
+    	 CayTimKiem cayVatTu=readFromFileByMa("vatTu.txt");
+    	
+    	//Tim mavt trong cay; sua so luong
+    	cayVatTu.updateNodeSoluong(mavt,soluong,loai);
+    	//Ghi cay lai tep
+    	
+    	cayVatTu.ghiFileLNR("vatTu.txt");
+    	
+	}
 
