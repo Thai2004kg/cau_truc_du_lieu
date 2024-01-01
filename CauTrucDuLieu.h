@@ -53,7 +53,7 @@ class DanhSachChiTietHoaDon{
 	void insertHead(CTHD d);
 	void taoDanhSach(int sohd);
 	void hienThi();
-	void Luu(int SoHoaDon,char* filename);
+	void Luu(char* filename);
 	void Doc(char* filename);
 	
 };
@@ -219,7 +219,7 @@ public:
 		}
 	}
 	//Luu chi tiet hoa don, gom co So Hoa Don
-	void DanhSachChiTietHoaDon::Luu(int SoHoaDon,char* filename) {
+	void DanhSachChiTietHoaDon::Luu(char* filename) {
 		 
     	std::ofstream outputFile(filename);
 
@@ -231,7 +231,7 @@ public:
     
         CTHDNode* current = head;
         while (current != NULL) {
-           outputFile<<SoHoaDon<<","<<current->DuLieu.MaVT<<","<<current->DuLieu.SoLuong<<","<<current->DuLieu.DonGia<<","<<current->DuLieu.VAT<<endl;
+           outputFile<<current->DuLieu.MaVT<<","<<current->DuLieu.SoLuong<<","<<current->DuLieu.DonGia<<","<<current->DuLieu.VAT<<","<<current->DuLieu.SoHD<<endl;
             current = current->next;
         }
 
@@ -248,13 +248,13 @@ public:
     string line;
     while (std::getline(inFile, line)) {
         std::stringstream ss(line);
-        string ssoHD,smaVT,ssoluong, sdongia,svat;
-
-        getline(ss,ssoHD,',');
+        string smaVT,ssoluong, sdongia,svat,ssoHD;
+       
         getline(ss,smaVT,',');
         getline(ss,ssoluong,',');
         getline(ss,sdongia,',');
         getline(ss,svat,',');
+        getline(ss,ssoHD,',');
         int soHD=stoi(ssoHD);
         int maVT=stoi(smaVT);//doi chuoi thanh int
         int soluong=stoi(ssoluong);

@@ -118,14 +118,14 @@ void XoaVatTu(CayTimKiem t, char* filename){
 }
 
 
-void LapHoaDon(DSHoaDon hd, int manv, char* filename, char* fileChiTietHD){
-	hd.Doc(filename);
-	hd.taoDanhSach(manv);
+void LapHoaDon(DSHoaDon hd, int manv, char* fileHoaDon, char* fileChiTietHD){
+	hd.Doc(fileHoaDon);
+	hd.taoDanhSach(manv); // PHai lien ket voi vat tu, de tim vat tu N (tang so luong); X (giam so luong);
 	//Luu hoa don
-	hd.Luu(filename);//
+	hd.Luu(fileHoaDon);//
 	//Nhap chi tiet hoa don, luu chi tiet hoa don
 	hd.head->data.dscthd.Doc(fileChiTietHD);
-	hd.head->data.dscthd.Luu(hd.head->data.SoHD,fileChiTietHD); // Can sua khong luu so hoa don cho tat ca giong nhau
+	hd.head->data.dscthd.Luu(fileChiTietHD); // Can sua khong luu so hoa don cho tat ca giong nhau
 }
 
 int MASO_NHANVIEN=-1;
