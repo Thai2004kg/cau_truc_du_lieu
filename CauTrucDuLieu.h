@@ -55,6 +55,7 @@ class DanhSachChiTietHoaDon{
 	void insertHead(CTHD d);
 	void taoDanhSach(int sohd, char* loai);
 	void hienThi();
+	int timVatTu(int mavt); // tra ve 1 neu khong tim gap; nguoc lai tra ve 0
 	void Luu(char* filename);
 	void Doc(char* filename);
 	
@@ -193,6 +194,18 @@ public:
 	DanhSachChiTietHoaDon::DanhSachChiTietHoaDon(){
 		head=NULL;
 	}
+	
+	int DanhSachChiTietHoaDon::timVatTu(int mavt) // tra ve 1 neu khong tim gap; nguoc lai tra ve 0
+	{
+		int gap=0;
+		CTHDNode* current=head;
+		while(current!=NULL){
+			if(current->DuLieu.MaVT==mavt)
+				return ++gap;
+			current=current->next;
+		}
+		return gap;
+}
 	void DanhSachChiTietHoaDon::insertHead(CTHD d){
 		CTHDNode* p=new CTHDNode(d);
 		p->next=head;
@@ -240,7 +253,8 @@ public:
         outputFile.close();
         cout << "ghi thanh cong " << filename << endl;
     }
-    void DanhSachChiTietHoaDon::Doc(char* filename) {
+    
+  void DanhSachChiTietHoaDon::Doc(char* filename) {
      ifstream inFile(filename);
     if (!inFile.is_open()) {
         std::cerr << "Loi mo file" << std::endl;
@@ -832,8 +846,12 @@ public:
      void updateNodeSoluong(int ma_vt, double sl, char* loai) {
         Node* p = searchNode(root, ma_vt);
         if (p != NULL) {
-        	if(strcmp(loai,"X")==0)
-            	p->DuLieu.SoLuongTon -= sl;
+        	if(strcmp(loai,"X")==0) {
+        		if(p->DuLieu.SoLuongTon>=sl)
+            		p->DuLieu.SoLuongTon -= sl;
+            	else
+            		cout<<"So luong xuat "<< sl <<" > So luong ton "<<	p->DuLieu.SoLuongTon <<endl;
+            	}
             else
             	p->DuLieu.SoLuongTon += sl;
         } else
@@ -1083,7 +1101,7 @@ CayTimKiem readFromFileByMa(const std::string& filename) {
     return cayVatTu;
 }
  
-    void CapNhatDanhMucVatTu(int mavt, char* loai, int soluong){
+void CapNhatDanhMucVatTu(int mavt, char* loai, int soluong){
     	//Doc tep nap len cay
     	 CayTimKiem cayVatTu=readFromFileByMa("vatTu.txt");
     	

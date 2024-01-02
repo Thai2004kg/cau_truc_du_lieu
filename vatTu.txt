@@ -1,5 +1,7 @@
-1,Duong phen,kg,30
-4,Bot Ngot ajino,Bao,40
+1,Duong phen,kg,32
+2,Duong phen,kg,30
+3,Duong,kg,40
+4,Duong cat,kg,30
+5,Duong vang,kg,30
 7,Duong,kg,40
-12,Gao st25,bao,54
-23,Gao nep,Bao,33
+14,Gao st24,bao,54

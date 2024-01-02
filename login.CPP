@@ -110,10 +110,22 @@ void XoaVatTu(CayTimKiem t, char* filename){
 	int ma_vt;
 	cout<<"nhap ma vat tu can xoa: ";
 	cin>>ma_vt;
-	t.deleteNode(ma_vt);
-		
-	//ghi lai file
-	t.ghiFileLNR(filename);
+	//Kiem tra xem vat tu da co HoaDonNhapXuat hay chua?
+	//Tuc la kiem tra Ma vat tu co ton tai trong file ChiTietHoaDon.txt hay chua? neu co thi bao loi, nguoc lai
+	DanhSachChiTietHoaDon dsChiTietVatTu;
+	dsChiTietVatTu.Doc("ChiTietHoaDon.txt");
+	int gap=dsChiTietVatTu.timVatTu(ma_vt);
+	cout<<gap;
+	if(gap!=0)
+	{
+	cout<<"Khong the xoa vi Vat tu nay da lap Hoa don";
+		}
+	else{
+		t.deleteNode(ma_vt);
+		//ghi lai file
+		t.ghiFileLNR(filename);
+	}
+	
 	getch();
 }
 
@@ -178,7 +190,7 @@ int main (){ system ("cls");
 	}
 	case 9:{
 		
-		XoaVatTu(t,fileVatTu);
+		XoaVatTu(t,fileVatTu); // bo sung kiem tra ma vat tu trong ChiTietHoaDon neu ton tai thi bao loi
 	
 	
 		break;
