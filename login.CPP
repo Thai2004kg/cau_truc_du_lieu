@@ -10,8 +10,8 @@
 using namespace std;
 const int MAXLIST =20000;
 
-const int so_item = 11;
-const int dong =11;
+const int so_item = 12;
+const int dong =12;
 const int cot = 30 ;
 const int Up = 72; // Extended code 
 const int Down = 80;
@@ -20,13 +20,14 @@ char thucdon [so_item][50] = {"1. Liet ke danh sach      ",
 			                  "2. Tim kiem nhan vien      ",
 			                  "3. Them nhan vien          ",
 			                  "4. Xoa nhan vien          ",
-			                  "5. Luu          ",
+			                  "5. Cap nhat nhan vien          ",
 			                  "6. Liet ke vat tu         ",
 			                  "7. Hieu chinh vat tu        ",
 			                "8.Them vat tu         ",
 			                 "9. Xoa vat tu        ",
 			                 "10. Lap hoa don        ",
-							  "11. Ket thuc chuong trinh  "};
+			                  "11. In hoa don        ",
+							  "12. Ket thuc chuong trinh  "};
 
 int MenuDong(char td [so_item][50]){
 
@@ -140,6 +141,53 @@ void LapHoaDon(DSHoaDon hd, int manv, char* fileHoaDon, char* fileChiTietHD){
 	hd.head->data.dscthd.Luu(fileChiTietHD); // Can sua khong luu so hoa don cho tat ca giong nhau
 }
 
+void TongHopHoaDon(char* fileHoaDon, char* fileChiTietHD, char* fileVatTu, char* fileNhanVien){
+	int SoHoaDon;
+	cout<<"Nhap so hoa don ";
+	cin>> SoHoaDon;
+	
+	DSHoaDon hd;
+	hd.Doc(fileHoaDon);
+	HoaDon d=hd.TimHoaDon(SoHoaDon);
+	if(d.SoHD!=0){
+		d.hienThi();
+		
+		DanhSachNhanVien dsNhanVien;
+		dsNhanVien.Doc(fileNhanVien);
+		NhanVien nv;
+		nv=dsNhanVien.searchbyMaNV(d.MaNV);
+			string Ho,Ten;
+		if(nv.MaNV!=0){
+			Ho=nv.Ho;
+			Ten=nv.Ten;
+		}
+		cout<<Ho<<" "<<Ten;
+		
+		DanhSachChiTietHoaDon dsChiTiet;
+		dsChiTiet.DocBy(fileChiTietHD,SoHoaDon);
+		
+		CayTimKiem cay=readFromFileByMa(fileVatTu);
+		
+		DanhSachHoaDonIn dsHoaDonIn;
+	
+		CTHDNode* current=dsChiTiet.head;
+		while(current!=NULL){
+			cout<<current->DuLieu.MaVT<<endl;
+			Node* nut=cay.searchNode(cay.root,current->DuLieu.MaVT);
+			cout<<nut->DuLieu.TenVatTu<<endl;
+			HoaDonIn hdin(SoHoaDon,d.NgayLap,Ho,Ten,d.Loai,nut->DuLieu.TenVatTu,current->DuLieu.SoLuong,current->DuLieu.DonGia,current->DuLieu.VAT);
+			dsHoaDonIn.Them(hdin);
+			current=current->next;
+		}
+		dsHoaDonIn.InHoaDon();
+	
+}
+else
+	cout<<"So hoa don khong ton tai ";
+	
+	getch();
+}
+
 int MASO_NHANVIEN=-1;
 
 int main (){ system ("cls");
@@ -171,11 +219,16 @@ int main (){ system ("cls");
     case 1: ds.hienThi(); break;
     case 2: ds.searchTen(); break;
 	case 3: ds.nhap();
+			ds.Luu(fileNhanVien);
             break;
     case 4: ds.XoaNhanVien(); 
+    		ds.Luu(fileNhanVien);
     		break;
-    case 5: ds.Luu(fileNhanVien); break;
-    //vat tu
+   case 5:
+    ds.ChinhSuaNhanVien();
+    ds.Luu(fileNhanVien);
+    break;
+
     case 6: {
 		LietKeVatTu(t,fileVatTu);//Cay Tim kiem nhi phan theo ten
 		break;
@@ -198,6 +251,12 @@ int main (){ system ("cls");
 	case 10:{
 		
 		LapHoaDon(hd,MASO_NHANVIEN ,fileHoaDon,fileChitietHoaDon);	
+	
+		break;
+	}
+	case 11:{
+	
+		TongHopHoaDon(fileHoaDon, fileChitietHoaDon, fileVatTu, fileNhanVien);
 	
 		break;
 	}

@@ -58,7 +58,7 @@ class DanhSachChiTietHoaDon{
 	int timVatTu(int mavt); // tra ve 1 neu khong tim gap; nguoc lai tra ve 0
 	void Luu(char* filename);
 	void Doc(char* filename);
-	
+	void DocBy(char* filename,int SoHoaDon);
 };
 
 class HoaDon {
@@ -92,6 +92,7 @@ void taoDanhSach(int manv);
 void hienThi();
 void Luu(char* filename);
 void Doc(char* filename);
+HoaDon TimHoaDon(int SoHoaDon);
 };
 
 class NhanVien{
@@ -116,6 +117,7 @@ public:
 	void nhap();
 	void hienThi();
 	int searchMaNV(int maNV);
+	NhanVien searchbyMaNV(int maNV);
 	int searchTen(char* ten);
 	void searchTen();
 	void swap(NhanVien &a,NhanVien &b);
@@ -124,9 +126,77 @@ public:
 	void Doc(char* filename);
 	int Login(); // return MaNV sau dang nhap thanh cong
 	void XoaNhanVien();
+	void ChinhSuaNhanVien();
 };
 	
+class HoaDonIn{
+	public:
+	int SoHoaDon;
+	string Ngay;
+	string Ho;
+	string Ten;
+	string Loai;
+	string TenVatTu;
+	int SoLuong;
+	double DonGia;
+	double VAT;
+	double TriGia;
+	HoaDonIn(){
+		SoHoaDon=0;
+		Ngay="";
+		Ho="";
+		Ten="";
+		Loai="";
+		TenVatTu="";
+		SoLuong=0;
+		DonGia=0.0;
+		VAT=0.0;
+		TriGia=0.0;
+	}
+		HoaDonIn(int so,string ngay,string h, string t, string l, string tenvt, int sl, double dg,double vat){
+		SoHoaDon=so;
+		Ngay=ngay;
+		Ho=h;
+		Ten=t;
+		Loai=l;
+		TenVatTu=tenvt;
+		SoLuong=sl;
+		DonGia=dg;
+		VAT=vat;
+		TriGia=sl*dg+sl*dg*vat;
+	}
+	void TinhTriGia(){
+		TriGia=SoLuong*DonGia+SoLuong*DonGia*VAT;
+	}
+};
 
+class DanhSachHoaDonIn{
+	public:
+	int SoPhanTu;
+	HoaDonIn DSHoaDonIn[HDlength];
+	void Them(HoaDonIn hdin){//them cuoi ds
+		DSHoaDonIn[SoPhanTu]=hdin;
+		SoPhanTu++;
+	}
+		
+double TongTriGia(){
+		double tong=0;
+		for(int i=0;i<SoPhanTu;i++)
+			tong+=DSHoaDonIn[i].TriGia;
+			
+		return tong;
+	}
+	
+	void InHoaDon(){
+		cout<<"Ngay ,       Ho ten , Loai ,    tenvt , soluong, dongia ,vat, trigia"<<endl;
+			for(int i=0;i<SoPhanTu;i++){
+				cout<<DSHoaDonIn[i].Ngay <<" "<<DSHoaDonIn[i].Ho<<" "<<DSHoaDonIn[i].Ten<<" "<<DSHoaDonIn[i].Loai<<" "<<DSHoaDonIn[i].TenVatTu<<" "<<DSHoaDonIn[i].SoLuong<<" "<<DSHoaDonIn[i].DonGia<<" "<<DSHoaDonIn[i].VAT<<" "<<DSHoaDonIn[i].TriGia<<endl;
+			}
+		cout<<"Tong tri gia HD : " << TongTriGia();
+
+	}
+	
+};
 //=======================
 //BEGIN CTHD: Chi tiet Hoa Don
 //=======================
@@ -288,7 +358,42 @@ public:
     
     cout << "Doc thanh cong " << filename << endl;
 }
+	
+void DanhSachChiTietHoaDon::DocBy(char* filename,int SoHoaDon) {
+     ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        std::cerr << "Loi mo file" << std::endl;
+        return ;
+    }
 
+    string line;
+    while (std::getline(inFile, line)) {
+        std::stringstream ss(line);
+        string smaVT,ssoluong, sdongia,svat,ssoHD;
+       
+        getline(ss,smaVT,',');
+        getline(ss,ssoluong,',');
+        getline(ss,sdongia,',');
+        getline(ss,svat,',');
+        getline(ss,ssoHD,',');
+        int soHD=stoi(ssoHD);
+        int maVT=stoi(smaVT);//doi chuoi thanh int
+        int soluong=stoi(ssoluong);
+        double dongia=stod(sdongia);//doi chuoi thanh double
+        double vat=stod(svat);
+        if(soHD==SoHoaDon){
+        	CTHD ct(maVT,soluong,dongia,vat,soHD);
+        	insertHead(ct);
+    	}
+	
+    }
+
+    inFile.close();
+
+	hienThi();
+    
+    cout << "Doc thanh cong " << filename << endl;
+}
     
 //=======================
 //BEGIN HoaDon: Hoa Don
@@ -349,7 +454,16 @@ public:
 DSHoaDon::DSHoaDon(){
 	head=NULL;
 	}
-
+HoaDon DSHoaDon::TimHoaDon(int SoHoaDon){
+	HoaDonNode* p=head;
+	HoaDon hd;
+	while(p!=NULL){
+		if(p->data.SoHD==SoHoaDon)
+			return p->data;
+		p=p->next;
+	}
+	return hd;
+}
 void DSHoaDon::insertHead(HoaDon d){
 		HoaDonNode* p=new HoaDonNode(d);
 		p->next=head;
@@ -425,7 +539,7 @@ void DSHoaDon::Doc(char* filename) {
 
     inFile.close();
 
-    hienThi();
+   // hienThi();
 
     cout << "Doc thanh cong " << filename << endl;
 }
@@ -516,6 +630,13 @@ int DanhSachNhanVien::searchMaNV(int maNV){
 			return i;
 		
 return -1;	
+}
+NhanVien DanhSachNhanVien::searchbyMaNV(int maNV){
+	NhanVien nv;
+		for(int i=0; i<SoNV; i++)
+		if(dsnv[i].MaNV==maNV)
+			return dsnv[i];
+	return nv;
 }
 int DanhSachNhanVien::searchTen(char* ten){
 	for(int i=0;i<SoNV;i++)
@@ -656,6 +777,31 @@ void DanhSachNhanVien::XoaNhanVien() {
     getch();
   }
 }
+
+void DanhSachNhanVien::ChinhSuaNhanVien() {
+    int maso;
+    cout << "Nhap ma nhan vien can chinh sua: ";
+    cin >> maso;
+    cin.ignore();
+    int vitri = searchMaNV(maso);
+    
+    if (vitri != -1) {
+        cout << "Thong tin nhan vien truoc khi chinh sua: ";
+        dsnv[vitri].HienThi();
+        NhanVien nv;
+        nv.NhapNhanVien();
+
+        dsnv[vitri] = nv;
+
+        cout << "Thong tin nhan vien sau khi chinh sua: ";
+        dsnv[vitri].HienThi();
+        getch();
+    } else {
+        cout << "Khong tim thay nhan vien co ma so " << maso << endl;
+        getch();
+    }
+}
+
 //=======================
 //BEGIN: VatTu
 //=======================
