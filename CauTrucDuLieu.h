@@ -5,11 +5,16 @@
 #include <conio.h>
 #include <cstdio>
 #include <sstream>
+#include <ctime>
+#include <cstdlib>
+#include <iomanip>
 using namespace std;
 
 #define HDlength 100
 #define MaxNV 200
 #define maxlength 80
+
+bool laGiua(const std::string& aDate, const std::string& startDate, const std::string& endDate);
 
 void CapNhatDanhMucVatTu(int mavt, char* loai,int soluong);//prototype
 
@@ -59,6 +64,7 @@ class DanhSachChiTietHoaDon{
 	void Luu(char* filename);
 	void Doc(char* filename);
 	void DocBy(char* filename,int SoHoaDon);
+	double TongTriGia(int SoHoaDon);
 };
 
 class HoaDon {
@@ -93,6 +99,7 @@ void hienThi();
 void Luu(char* filename);
 void Doc(char* filename);
 HoaDon TimHoaDon(int SoHoaDon);
+void DocTheoNgay(char* filename, string tungay, string denngay);	
 };
 
 class NhanVien{
@@ -165,6 +172,14 @@ class HoaDonIn{
 		VAT=vat;
 		TriGia=sl*dg+sl*dg*vat;
 	}
+	HoaDonIn(int so,string ngay,string h, string t, string l, double tongtrigia){
+		SoHoaDon=so;
+		Ngay=ngay;
+		Ho=h;
+		Ten=t;
+		Loai=l;
+		TriGia=tongtrigia;
+	}
 	void TinhTriGia(){
 		TriGia=SoLuong*DonGia+SoLuong*DonGia*VAT;
 	}
@@ -196,6 +211,17 @@ double TongTriGia(){
 
 	}
 	
+	void InThongKe(string tungay, string denngay){
+	cout<<"BANG LIET KE HOA DON TRONG KHOANG THOI GIAN"<<endl;
+	cout<<" Tu ngay: " << tungay << "den ngay: " <<denngay <<endl;
+   	cout<< "So HD		 Ngay lap		Loai HD		Ho	Ten		Tri gia" <<endl;
+   	for(int i=0;i<SoPhanTu;i++){
+		cout<<DSHoaDonIn[i].SoHoaDon <<"\t\t "<<DSHoaDonIn[i].Ngay
+		<<"\t\t "<<DSHoaDonIn[i].Loai<<"\t\t "<<DSHoaDonIn[i].Ho<<" "<<DSHoaDonIn[i].Ten<<"\t\t\t "
+		<<fixed <<setprecision(1)<< DSHoaDonIn[i].TriGia<<endl;		
+	}
+
+	}
 };
 //=======================
 //BEGIN CTHD: Chi tiet Hoa Don
@@ -354,9 +380,9 @@ double TongTriGia(){
 
     inFile.close();
 
-	hienThi();
+//	hienThi();
     
-    cout << "Doc thanh cong " << filename << endl;
+  //  cout << "Doc thanh cong " << filename << endl;
 }
 	
 void DanhSachChiTietHoaDon::DocBy(char* filename,int SoHoaDon) {
@@ -390,9 +416,23 @@ void DanhSachChiTietHoaDon::DocBy(char* filename,int SoHoaDon) {
 
     inFile.close();
 
-	hienThi();
+//	hienThi();
     
-    cout << "Doc thanh cong " << filename << endl;
+   // cout << "Doc thanh cong " << filename << endl;
+}
+
+double DanhSachChiTietHoaDon::TongTriGia(int SoHoaDon){
+	CTHDNode* p=this->head;
+	double tong=0;
+	double triGia=0;
+	while(p!=NULL){
+		if(p->DuLieu.SoHD==SoHoaDon){
+		triGia=p->DuLieu.SoLuong*p->DuLieu.DonGia+p->DuLieu.SoLuong*p->DuLieu.DonGia*p->DuLieu.VAT;
+		tong+=triGia;
+	}
+		p=p->next;
+	}
+return tong;	
 }
     
 //=======================
@@ -511,6 +551,51 @@ void DSHoaDon::taoDanhSach(int manv){
         cout << "ghi thanh cong: " << filename << endl;
     }
     
+
+	bool TrongKhoang(string sNgay, string tungay, string denngay){
+		
+		
+		return false;
+	
+	}
+    
+void DSHoaDon::DocTheoNgay(char* filename, string tungay, string denngay){
+ 
+   ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        std::cerr << "Loi mo file" << std::endl;
+        return;
+    }
+
+    string line;
+    while (std::getline(inFile, line)) {
+        std::stringstream ss(line);
+        string ssoHD,sNgay, sLoai,smaNV;
+
+        getline(ss,ssoHD,',');
+        getline(ss,sNgay,',');
+        getline(ss,sLoai,',');
+        getline(ss,smaNV,',');
+        int soHD=stoi(ssoHD);//doi chuoi thanh int
+		int maNV=stoi(smaNV);
+        char* cngay = const_cast<char*>(sNgay.c_str());//doi kieu string sang mang char
+        char* cloai = const_cast<char*>(sLoai.c_str());
+        
+        
+        if(laGiua(sNgay,tungay,denngay)){
+         HoaDon hd(soHD,cngay,cloai,maNV);
+        insertHead(hd);
+		}
+        	
+    }
+
+    inFile.close();
+
+   // hienThi();
+
+ //   cout << "Doc thanh cong " << filename << endl;	
+}
+
 void DSHoaDon::Doc(char* filename) {
    
    
@@ -541,7 +626,7 @@ void DSHoaDon::Doc(char* filename) {
 
    // hienThi();
 
-    cout << "Doc thanh cong " << filename << endl;
+  //  cout << "Doc thanh cong " << filename << endl;
 }
 		
 //=======================
@@ -1258,4 +1343,28 @@ void CapNhatDanhMucVatTu(int mavt, char* loai, int soluong){
     	cayVatTu.ghiFileLNR("vatTu.txt");
     	
 	}
+bool laGiua(const std::string& aDate, const std::string& startDate, const std::string& endDate) {
+    std::tm tm_aDate = {}, tm_startDate = {}, tm_endDate = {};
 
+    // doi chuoi strings sang tm structures
+    if (sscanf(aDate.c_str(), "%2d/%2d/%4d", &tm_aDate.tm_mday, &tm_aDate.tm_mon, &tm_aDate.tm_year) != 3 ||
+        sscanf(startDate.c_str(), "%2d/%2d/%4d", &tm_startDate.tm_mday, &tm_startDate.tm_mon, &tm_startDate.tm_year) != 3 ||
+        sscanf(endDate.c_str(), "%2d/%2d/%4d", &tm_endDate.tm_mday, &tm_endDate.tm_mon, &tm_endDate.tm_year) != 3) {
+        // Handle parsing error
+        return false;
+    }
+
+    // Chinh nam va thang trong tm structures vi c++ tinh so nam tu 1900 va 0 = January
+    tm_aDate.tm_year -= 1900;
+    tm_startDate.tm_year -= 1900;
+    tm_endDate.tm_year -= 1900;
+    
+    tm_aDate.tm_mon -= 1;
+    tm_startDate.tm_mon -= 1;
+    tm_endDate.tm_mon -= 1;
+
+
+    // Kiem tra xem aDate la giua startDate va endDate
+    return std::mktime(&tm_startDate) <= std::mktime(&tm_aDate) &&
+           std::mktime(&tm_aDate) <= std::mktime(&tm_endDate);
+}

@@ -1,7 +1,7 @@
 1,Duong phen,kg,32
-2,Duong phen,kg,30
-3,Duong,kg,40
+2,lua,kg,30
+3,gao,kg,17
 4,Duong cat,kg,30
 5,Duong vang,kg,30
 7,Duong,kg,40
-14,Gao st24,bao,54
+14,Gao st25,kg,32

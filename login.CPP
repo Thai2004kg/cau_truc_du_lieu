@@ -7,11 +7,12 @@
 #include "CauTrucDuLieu.h"
 #include "GiaoDien.h"
 
+
 using namespace std;
 const int MAXLIST =20000;
 
-const int so_item = 12;
-const int dong =12;
+const int so_item = 13;
+const int dong =13;
 const int cot = 30 ;
 const int Up = 72; // Extended code 
 const int Down = 80;
@@ -27,7 +28,8 @@ char thucdon [so_item][50] = {"1. Liet ke danh sach      ",
 			                 "9. Xoa vat tu        ",
 			                 "10. Lap hoa don        ",
 			                  "11. In hoa don        ",
-							  "12. Ket thuc chuong trinh  "};
+			                  "12. Thong ke hoa don        ",
+							  "13. Ket thuc chuong trinh  "};
 
 int MenuDong(char td [so_item][50]){
 
@@ -150,7 +152,7 @@ void TongHopHoaDon(char* fileHoaDon, char* fileChiTietHD, char* fileVatTu, char*
 	hd.Doc(fileHoaDon);
 	HoaDon d=hd.TimHoaDon(SoHoaDon);
 	if(d.SoHD!=0){
-		d.hienThi();
+	//	d.hienThi();
 		
 		DanhSachNhanVien dsNhanVien;
 		dsNhanVien.Doc(fileNhanVien);
@@ -161,7 +163,7 @@ void TongHopHoaDon(char* fileHoaDon, char* fileChiTietHD, char* fileVatTu, char*
 			Ho=nv.Ho;
 			Ten=nv.Ten;
 		}
-		cout<<Ho<<" "<<Ten;
+	//	cout<<Ho<<" "<<Ten;
 		
 		DanhSachChiTietHoaDon dsChiTiet;
 		dsChiTiet.DocBy(fileChiTietHD,SoHoaDon);
@@ -172,9 +174,9 @@ void TongHopHoaDon(char* fileHoaDon, char* fileChiTietHD, char* fileVatTu, char*
 	
 		CTHDNode* current=dsChiTiet.head;
 		while(current!=NULL){
-			cout<<current->DuLieu.MaVT<<endl;
+		//	cout<<current->DuLieu.MaVT<<endl;
 			Node* nut=cay.searchNode(cay.root,current->DuLieu.MaVT);
-			cout<<nut->DuLieu.TenVatTu<<endl;
+		//	cout<<nut->DuLieu.TenVatTu<<endl;
 			HoaDonIn hdin(SoHoaDon,d.NgayLap,Ho,Ten,d.Loai,nut->DuLieu.TenVatTu,current->DuLieu.SoLuong,current->DuLieu.DonGia,current->DuLieu.VAT);
 			dsHoaDonIn.Them(hdin);
 			current=current->next;
@@ -185,6 +187,41 @@ void TongHopHoaDon(char* fileHoaDon, char* fileChiTietHD, char* fileVatTu, char*
 else
 	cout<<"So hoa don khong ton tai ";
 	
+	getch();
+}
+
+//Thong ke Hoa don cau g
+void ThongKeHoaDon(char* fileHoaDon, char* fileChiTietHD, char* fileNhanVien){
+	string tungay,denngay;
+	cout<<"Tu ngay: ";
+	cin>> tungay;
+	
+	cout<<"Den ngay: ";
+	cin>> denngay;
+	
+	DSHoaDon dshd;
+	//dshd.Doc(fileHoaDon);
+	dshd.DocTheoNgay(fileHoaDon,tungay,denngay);
+//	dshd.hienThi();
+	DanhSachNhanVien dsNhanVien;
+	dsNhanVien.Doc(fileNhanVien);
+	
+	DanhSachChiTietHoaDon dsChiTiet;
+	dsChiTiet.Doc(fileChiTietHD);
+	HoaDonNode *p=dshd.head;
+	double triGia=0;
+
+	DanhSachHoaDonIn dsHoaDonIn;
+	while(p!=NULL){
+		
+		triGia=dsChiTiet.TongTriGia(p->data.SoHD);
+		NhanVien nv=dsNhanVien.searchbyMaNV(p->data.MaNV);
+		HoaDonIn hdin(p->data.SoHD, p->data.NgayLap,nv.Ho,nv.Ten,p->data.Loai,triGia);
+		dsHoaDonIn.Them(hdin);
+		p=p->next;
+	}
+	dsHoaDonIn.InThongKe(tungay, denngay);
+
 	getch();
 }
 
@@ -219,6 +256,7 @@ int main (){ system ("cls");
     case 1: ds.hienThi(); break;
     case 2: ds.searchTen(); break;
 	case 3: ds.nhap();
+			ds.SapXep();
 			ds.Luu(fileNhanVien);
             break;
     case 4: ds.XoaNhanVien(); 
@@ -258,6 +296,11 @@ int main (){ system ("cls");
 	
 		TongHopHoaDon(fileHoaDon, fileChitietHoaDon, fileVatTu, fileNhanVien);
 	
+		break;
+	}
+	case 12:{
+		ThongKeHoaDon(fileHoaDon, fileChitietHoaDon, fileNhanVien);
+		
 		break;
 	}
     case so_item : { ds.Luu(fileNhanVien); return 0;}
