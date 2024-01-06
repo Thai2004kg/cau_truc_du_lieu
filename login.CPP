@@ -11,8 +11,8 @@
 using namespace std;
 const int MAXLIST =20000;
 
-const int so_item = 13;
-const int dong =13;
+const int so_item = 14;
+const int dong =14;
 const int cot = 30 ;
 const int Up = 72; // Extended code 
 const int Down = 80;
@@ -29,7 +29,8 @@ char thucdon [so_item][50] = {"1. Liet ke danh sach      ",
 			                 "10. Lap hoa don        ",
 			                  "11. In hoa don        ",
 			                  "12. Thong ke hoa don        ",
-							  "13. Ket thuc chuong trinh  "};
+			                  "13. Top 10 Vat Tu        ",
+							  "14. Ket thuc chuong trinh  "};
 
 int MenuDong(char td [so_item][50]){
 
@@ -225,6 +226,45 @@ void ThongKeHoaDon(char* fileHoaDon, char* fileChiTietHD, char* fileNhanVien){
 	getch();
 }
 
+//Top 10 Vat Ti co doanh thu cao nhat trong 1 khoang thoi gian *Cau h
+void Top10VatTu(char* fileHoaDon, char* fileChiTietHD, char* fileVatTu){
+	string tungay,denngay;
+	cout<<"Tu ngay: ";
+	cin>> tungay;
+	
+	cout<<"Den ngay: ";
+	cin>> denngay;
+	
+	CayTimKiem cay=readFromFileByMa(fileVatTu);
+	
+
+	DSHoaDon dshd;
+	dshd.DocTheoLoaiNgay(fileHoaDon,'X',tungay,denngay);
+//	dshd.hienThi();
+	
+	HoaDonNode *p=dshd.head;
+	double triGia=0;
+
+	DanhSachHoaDonIn dsHoaDonIn;
+	while(p!=NULL){
+		DanhSachChiTietHoaDon dsChiTiet;
+		dsChiTiet.DocBy(fileChiTietHD,p->data.SoHD);
+		CTHDNode* c=dsChiTiet.head;
+		while(c!=NULL){
+			Node* nodeVatTu=cay.searchNode(cay.root,c->DuLieu.MaVT);
+			string TenVatTu=nodeVatTu->DuLieu.TenVatTu;
+			HoaDonIn hdin(c->DuLieu.MaVT, TenVatTu, c->DuLieu.SoLuong, c->DuLieu.DonGia,c->DuLieu.VAT);
+			dsHoaDonIn.Them(hdin);
+			c=c->next;
+		}
+		
+		p=p->next;
+	}
+	dsHoaDonIn.InTop10TriGia();
+
+	getch();
+}
+
 int MASO_NHANVIEN=-1;
 
 int main (){ system ("cls");
@@ -301,6 +341,10 @@ int main (){ system ("cls");
 	case 12:{
 		ThongKeHoaDon(fileHoaDon, fileChitietHoaDon, fileNhanVien);
 		
+		break;
+	}
+	case 13:{		
+		Top10VatTu(fileHoaDon, fileChitietHoaDon, fileVatTu);
 		break;
 	}
     case so_item : { ds.Luu(fileNhanVien); return 0;}
