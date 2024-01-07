@@ -8,6 +8,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <iomanip>
+#include <map>
 using namespace std;
 
 #define HDlength 100
@@ -65,6 +66,7 @@ class DanhSachChiTietHoaDon{
 	void Doc(char* filename);
 	void DocBy(char* filename,int SoHoaDon);
 	double TongTriGia(int SoHoaDon);
+	double TongTriGiaTheoMaVT(int MaVatTu);
 };
 
 class HoaDon {
@@ -99,7 +101,8 @@ void hienThi();
 void Luu(char* filename);
 void Doc(char* filename);
 HoaDon TimHoaDon(int SoHoaDon);
-void DocTheoNgay(char* filename, string tungay, string denngay);	
+void DocTheoNgay(char* filename, string tungay, string denngay);
+void DocTheoLoaiNgay(char* filename, char Loai, string tungay, string denngay);
 };
 
 class NhanVien{
@@ -143,6 +146,7 @@ class HoaDonIn{
 	string Ho;
 	string Ten;
 	string Loai;
+	int MaVatTu;
 	string TenVatTu;
 	int SoLuong;
 	double DonGia;
@@ -154,11 +158,26 @@ class HoaDonIn{
 		Ho="";
 		Ten="";
 		Loai="";
+		MaVatTu=0;
 		TenVatTu="";
 		SoLuong=0;
 		DonGia=0.0;
 		VAT=0.0;
 		TriGia=0.0;
+	}
+	HoaDonIn(int mavt, string tenvt, double giatri){
+		MaVatTu=mavt;
+		TenVatTu=tenvt;
+		TriGia=giatri;
+	}
+	
+	HoaDonIn(int mavt, string tenvt, int sl, double dg,double vat){
+		MaVatTu=mavt;
+		TenVatTu=tenvt;
+		SoLuong=sl;
+		DonGia=dg;
+		VAT=vat;
+		TriGia=sl*dg+sl*dg*vat;
 	}
 		HoaDonIn(int so,string ngay,string h, string t, string l, string tenvt, int sl, double dg,double vat){
 		SoHoaDon=so;
@@ -201,6 +220,80 @@ double TongTriGia(){
 			
 		return tong;
 	}
+
+	
+map<int,double> TongTriGiaTheoMaVatTu(){
+		map<int,double> tong;
+		for(int i=0;i<SoPhanTu;i++){
+			int key=DSHoaDonIn[i].MaVatTu;
+			double value=DSHoaDonIn[i].TriGia;
+			tong[key]+=value;
+		}
+			
+	return tong;
+	}
+	
+string getTen(int mavt){
+	
+	for(int i=0;i<SoPhanTu;i++)
+		if(DSHoaDonIn[i].MaVatTu==mavt)
+			return DSHoaDonIn[i].TenVatTu;
+	
+	return "---";
+}
+	
+void SapXepTriGiaGiam(){
+	for(int i=0;i<SoPhanTu-1;i++)
+		for(int j=0;j<SoPhanTu-i-1;j++)
+			if(DSHoaDonIn[j].TriGia<DSHoaDonIn[j+1].TriGia)
+			{//Doi cho
+				HoaDonIn temp=DSHoaDonIn[j];
+				DSHoaDonIn[j]=DSHoaDonIn[j+1];
+				DSHoaDonIn[j+1]=temp;
+			}
+}
+
+void SapXepGiam(HoaDonIn hodon[], int n){
+	for(int i=0;i<n-1;i++)
+		for(int j=0;j<n-i-1;j++)
+			if(hodon[j].TriGia<hodon[j+1].TriGia)
+			{//Doi cho
+				HoaDonIn temp=hodon[j];
+				hodon[j]=hodon[j+1];
+				hodon[j+1]=temp;
+			}
+}
+
+void InTop10TriGia()
+{
+	map<int,double> Top10Result=TongTriGiaTheoMaVatTu();
+
+	int n=0;
+	HoaDonIn danhSachIn[HDlength];
+	//Tao 1 Mang HoaDonIn chua ma vat tu, ten vat tu, tong tri gia tuong ung
+	for(auto &p : Top10Result ){
+		danhSachIn[n].MaVatTu= p.first;
+		danhSachIn[n].TenVatTu=getTen(p.first);
+		danhSachIn[n].TriGia=p.second;
+		n++;
+	}
+	//Sap xep giam dan theo tri gia
+	SapXepGiam(danhSachIn,n);
+	//In ra man hinh
+	cout<<endl;
+	cout<<"Top 10 Vat Tu co Doanh Thu (Hoa Don Loai X) cao nhat "<<endl;
+	
+	cout<<"Ma Vat Tu,	";
+	cout<< std::left <<std::setw(25)<<"Ten Vat Tu,	";
+	cout<<std::right<<std::setw(12)<<"trigia"<<endl;
+	for(int i=0;(i<n)&&(i<=10);i++) // in top 10
+	{
+		cout<<danhSachIn[i].MaVatTu<<"\t\t";
+		cout<< std::left<<std::setw(25)<<danhSachIn[i].TenVatTu<<"\t";
+		cout<<std::right<<std::setw(12)<<danhSachIn[i].TriGia<<"\n";
+	}
+	
+}
 	
 	void InHoaDon(){
 		cout<<"Ngay ,       Ho ten , Loai ,    tenvt , soluong, dongia ,vat, trigia"<<endl;
@@ -434,6 +527,20 @@ double DanhSachChiTietHoaDon::TongTriGia(int SoHoaDon){
 	}
 return tong;	
 }
+
+double DanhSachChiTietHoaDon::TongTriGiaTheoMaVT(int MaVatTu){
+	CTHDNode* p=this->head;
+	double tong=0;
+	double triGia=0;
+	while(p!=NULL){
+		if(p->DuLieu.MaVT==MaVatTu){
+		triGia=p->DuLieu.SoLuong*p->DuLieu.DonGia+p->DuLieu.SoLuong*p->DuLieu.DonGia*p->DuLieu.VAT;
+		tong+=triGia;
+	}
+		p=p->next;
+	}
+return tong;	
+}
     
 //=======================
 //BEGIN HoaDon: Hoa Don
@@ -552,12 +659,36 @@ void DSHoaDon::taoDanhSach(int manv){
     }
     
 
-	bool TrongKhoang(string sNgay, string tungay, string denngay){
-		
-		
-		return false;
 	
-	}
+void DSHoaDon::DocTheoLoaiNgay(char* filename, char Loai, string tungay, string denngay){
+	  ifstream inFile(filename);
+    if (!inFile.is_open()) {
+        std::cerr << "Loi mo file" << std::endl;
+        return;
+    }
+
+    string line;
+    while (std::getline(inFile, line)) {
+        std::stringstream ss(line);
+        string ssoHD,sNgay, sLoai,smaNV;
+        getline(ss,ssoHD,',');
+        getline(ss,sNgay,',');
+        getline(ss,sLoai,',');
+        getline(ss,smaNV,',');
+        int soHD=stoi(ssoHD);//doi chuoi thanh int
+		int maNV=stoi(smaNV);
+        char* cngay = const_cast<char*>(sNgay.c_str());//doi kieu string sang mang char
+        char* cloai = const_cast<char*>(sLoai.c_str());
+		if(toupper(cloai[0])==toupper(Loai))
+			if(laGiua(sNgay,tungay,denngay)){
+			   	HoaDon hd(soHD,cngay,cloai,maNV);
+        		insertHead(hd);
+		}
+        	
+    }
+
+    inFile.close();
+}
     
 void DSHoaDon::DocTheoNgay(char* filename, string tungay, string denngay){
  
@@ -580,11 +711,10 @@ void DSHoaDon::DocTheoNgay(char* filename, string tungay, string denngay){
 		int maNV=stoi(smaNV);
         char* cngay = const_cast<char*>(sNgay.c_str());//doi kieu string sang mang char
         char* cloai = const_cast<char*>(sLoai.c_str());
-        
-        
+          
         if(laGiua(sNgay,tungay,denngay)){
-         HoaDon hd(soHD,cngay,cloai,maNV);
-        insertHead(hd);
+        	HoaDon hd(soHD,cngay,cloai,maNV);
+        	insertHead(hd);
 		}
         	
     }
@@ -646,6 +776,7 @@ void NhanVien::NhapNhanVien() {
     char ho[MaxNV], ten[MaxNV], phai[MaxNV];
     cout << "Nhap ma nhan vien: ";
     cin >> maNV;
+   		
     do {
         cout << "Ho: ";
         cin.ignore();
@@ -686,14 +817,41 @@ DanhSachNhanVien::DanhSachNhanVien(){
 void DanhSachNhanVien::nhap() {
     char tiepTuc;
     
-    do {
-        NhanVien nv;
-        nv.NhapNhanVien();
-        while(searchMaNV(nv.MaNV)!=-1){
+do {
+ 	int maNV;
+    char ho[MaxNV], ten[MaxNV], phai[MaxNV];
+    cout << "Nhap ma nhan vien: ";
+    cin >> maNV;
+    //Trung Ma Nhan Vien Nhap lai
+    while(searchMaNV(maNV)!=-1){
         	cout<<"Trung ma nhan vien, hay nhap lai \n";
-        	nv.NhapNhanVien();
-		}
-        dsnv[SoNV++] = nv;
+        	 cin >> maNV;
+	}
+   	
+	   //Ho trong nhap lai	
+    do {
+        cout << "Ho: ";
+        cin.ignore();
+        cin.getline(ho, sizeof(ho));
+        if (strlen(ho) == 0) {
+            cout << "Ho khong duoc bo trong. Vui long nhap lai.\n";
+        }
+    } while (strlen(ho) == 0);
+    
+    //Nhap ten, trong nhap lai
+    do {
+        cout << "Ten: ";
+        cin.getline(ten, sizeof(ten));
+        if (strlen(ten) == 0) {
+            cout << "Ten khong duoc bo trong. Vui long nhap lai.\n";
+        }
+    } while (strlen(ten) == 0);
+    
+    cout << "Gioi tinh: ";
+    cin.getline(phai, sizeof(phai));
+    
+	NhanVien nv(maNV,ho,ten,phai);
+    dsnv[SoNV++] = nv;
 
         cout << "nhap tiep? (y/n): ";
         cin >> tiepTuc;
@@ -703,8 +861,16 @@ void DanhSachNhanVien::nhap() {
 
 void DanhSachNhanVien::hienThi(){
 	SapXep();
-	for(int i=0;i<SoNV;i++)
-		dsnv[i].HienThi();
+	cout<<"Ma so,	";
+	cout<< std::left <<std::setw(30)<<"Ho va ten,	";
+	cout<<std::left<<std::setw(5)<<"Gioi tinh"<<endl;
+	
+	for(int i=0;i<SoNV;i++) {
+		cout<< dsnv[i].MaNV <<"\t";
+		cout<<std::left <<std::setw(10)<< dsnv[i].Ho;
+		cout<<std::left <<std::setw(25)<< dsnv[i].Ten;
+		cout<<std::left <<std::setw(30)<< dsnv[i].Phai<<endl;
+	}
 		
 getch();
 }
@@ -1200,7 +1366,7 @@ Node* deleteNode(Node* p, int ma_vt) {
         ghiFileLNR(root, file);
     }
     
-    void ghiFileLNR(char* filename) {
+    void ghiFileLNR(string filename) {
     	ofstream file(filename,ios::out);
         ghiFileLNR(root, file);
         file.close();

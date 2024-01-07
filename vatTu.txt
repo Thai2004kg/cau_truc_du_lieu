@@ -1,7 +1,20 @@
-1,Duong phen,kg,32
+1,Duong phen,kg,9
 2,lua,kg,30
-3,gao,kg,17
+3,gao,kg,0
 4,Duong cat,kg,30
 5,Duong vang,kg,30
 7,Duong,kg,40
 14,Gao st25,kg,32
+20,Duong trang,kg,32
+21,lua nep,kg,30
+22,gao st10,kg,17
+23,banh mi,kg,30
+24,kem,kg,30
+25,Ly,kg,40
+26,Gao st23,kg,321
+27,lua mach,kg,30
+38,gao st21,kg,17
+41,Gao st01,kg,32
+49,tiger,kg,30
+56,ga,kg,30
+73,omachi,kg,40
