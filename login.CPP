@@ -240,7 +240,7 @@ void Top10VatTu(char* fileHoaDon, char* fileChiTietHD, char* fileVatTu){
 	
 
 	DSHoaDon dshd;
-	dshd.DocTheoLoaiNgay(fileHoaDon,'X',tungay,denngay);
+	dshd.DocTheoLoaiNgay(fileHoaDon,'X',tungay,denngay);//chi lay hoa don X (xuat kho, ban)
 //	dshd.hienThi();
 	
 	HoaDonNode *p=dshd.head;
@@ -248,15 +248,15 @@ void Top10VatTu(char* fileHoaDon, char* fileChiTietHD, char* fileVatTu){
 
 	DanhSachHoaDonIn dsHoaDonIn;
 	dsHoaDonIn.SoPhanTu=0;
-	while(p!=NULL){
+	while(p!=NULL){//Lap qua Danh Sach HoaDon(co nhieu chi tiet hoaDon
 		DanhSachChiTietHoaDon dsChiTiet;
-		dsChiTiet.DocBy(fileChiTietHD,p->data.SoHD);
+		dsChiTiet.DocBy(fileChiTietHD,p->data.SoHD);//doc chi tiet hoa don ung voi so hoa don
 		CTHDNode* c=dsChiTiet.head;
-		while(c!=NULL){
+		while(c!=NULL){//Lap qua danh sach ChitietHoaDon de tao Mau tin in
 			Node* nodeVatTu=cay.searchNode(cay.root,c->DuLieu.MaVT);
 			string TenVatTu=nodeVatTu->DuLieu.TenVatTu;
-			HoaDonIn hdin(c->DuLieu.MaVT, TenVatTu, c->DuLieu.SoLuong, c->DuLieu.DonGia,c->DuLieu.VAT);
-			dsHoaDonIn.Them(hdin);
+			HoaDonIn hdin(c->DuLieu.MaVT, TenVatTu, c->DuLieu.SoLuong, c->DuLieu.DonGia,c->DuLieu.VAT);//HoaDonIn; lop co cac Truong de in
+			dsHoaDonIn.Them(hdin);//Them vao danh sach hoa don in
 			c=c->next;
 		}
 		

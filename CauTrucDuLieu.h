@@ -215,18 +215,18 @@ class DanhSachHoaDonIn{
 		
 double TongTriGia(){
 		double tong=0;
-		for(int i=0;i<SoPhanTu;i++)
-			tong+=DSHoaDonIn[i].TriGia;
+		for(int i=0;i<this->SoPhanTu;i++)
+			tong+=this->DSHoaDonIn[i].TriGia;
 			
 		return tong;
 	}
 
 	
 map<int,double> TongTriGiaTheoMaVatTu(){
-		map<int,double> tong;
-		for(int i=0;i<SoPhanTu;i++){
-			int key=DSHoaDonIn[i].MaVatTu;
-			double value=DSHoaDonIn[i].TriGia;
+		map<int,double> tong;//Ban anh xa, gom truong Khoa=MaVatTu; GiaTri=TriGia
+		for(int i=0;i<this->SoPhanTu;i++){
+			int key=this->DSHoaDonIn[i].MaVatTu;
+			double value=this->DSHoaDonIn[i].TriGia;
 			tong[key]+=value;
 		}
 			
@@ -253,7 +253,7 @@ void SapXepTriGiaGiam(){
 			}
 }
 
-void SapXepGiam(HoaDonIn hodon[], int n){
+void SapXepGiam(HoaDonIn hodon[], int n){//Bubble Sort
 	for(int i=0;i<n-1;i++)
 		for(int j=0;j<n-i-1;j++)
 			if(hodon[j].TriGia<hodon[j+1].TriGia)
@@ -266,19 +266,19 @@ void SapXepGiam(HoaDonIn hodon[], int n){
 
 void InTop10TriGia()
 {
-	map<int,double> Top10Result=TongTriGiaTheoMaVatTu();
+	map<int,double> Top10Result=TongTriGiaTheoMaVatTu();//Nhom theo MaVatTu, tinh tong TriGia
 
 	int n=0;
 	HoaDonIn danhSachIn[HDlength];
 	//Tao 1 Mang HoaDonIn chua ma vat tu, ten vat tu, tong tri gia tuong ung
-	for(auto &p : Top10Result ){
+	for(auto &p : Top10Result ){//Doi voi moi phan tu p trong map Top10Result (co 2 cot first=MaVatTu, second=TriGia)
 		danhSachIn[n].MaVatTu= p.first;
 		danhSachIn[n].TenVatTu=getTen(p.first);
 		danhSachIn[n].TriGia=p.second;
 		n++;
 	}
 	//Sap xep giam dan theo tri gia
-	SapXepGiam(danhSachIn,n);
+	SapXepGiam(danhSachIn,n);//Tri gia lon nhat o tren cung, phan tu 0
 	//In ra man hinh
 	cout<<endl;
 	cout<<"Top 10 Vat Tu co Doanh Thu (Hoa Don Loai X) cao nhat "<<endl;
@@ -286,11 +286,11 @@ void InTop10TriGia()
 	cout<<"Ma Vat Tu,	";
 	cout<< std::left <<std::setw(25)<<"Ten Vat Tu,	";
 	cout<<std::right<<std::setw(12)<<"trigia"<<endl;
-	for(int i=0;(i<n)&&(i<=10);i++) // in top 10
+	for(int i=0;(i<n)&&(i<10);i++) // in top 10
 	{
 		cout<<danhSachIn[i].MaVatTu<<"\t\t";
 		cout<< std::left<<std::setw(25)<<danhSachIn[i].TenVatTu<<"\t";
-		cout<<std::right<<std::setw(12)<<danhSachIn[i].TriGia<<"\n";
+		cout<<std::right<<std::setw(12)<<std::fixed << std::setprecision(0)<<danhSachIn[i].TriGia<<"\n";
 	}
 	
 }

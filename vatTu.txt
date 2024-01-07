@@ -1,9 +1,16 @@
 1,Duong phen,kg,9
 2,lua,kg,30
 3,gao,kg,0
-4,Duong cat,kg,30
-5,Duong vang,kg,30
-7,Duong,kg,40
+4,Duong Thot Not,kg,30
+5,Duong Vang,kg,30
+6,Duong Cat Trang,kg,30
+7,Duong,kg,400
+8,Gao Thai,kg,320
+9,Gao Nep,kg,320
+10,Gao Nep Than,kg,320
+11,Bot Mi,kg,320
+12,Dau Den,kg,320
+13,Dau Xanh,kg,320
 14,Gao st25,kg,32
 20,Duong trang,kg,32
 21,lua nep,kg,30
